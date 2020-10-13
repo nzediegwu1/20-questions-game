@@ -19,7 +19,11 @@ const UserController = {
       password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
     });
     delete newUser._doc.password;
-    return response({ res, message: userSuccess.signup, data: newUser });
+    return response({
+      res,
+      message: userSuccess.signup,
+      data: { user: newUser, token: generateToken(newUser._doc) },
+    });
   },
 
   async login(req, res) {
@@ -36,7 +40,7 @@ const UserController = {
     return response({
       res,
       message: userSuccess.login,
-      data: { token: generateToken(user._doc), user }
+      data: { token: generateToken(user._doc), user },
     });
   },
 };

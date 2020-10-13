@@ -20,23 +20,6 @@
 import { LoginForm, SignupForm } from "../components";
 
 export default {
-  components: { LoginForm, SignupForm },
-  data() {
-    return {
-      form: {
-        email: "",
-        name: "",
-        password: "",
-        confirmPassword: ""
-      },
-      loading: false
-    };
-  },
-  methods: {
-    onSubmit(evt) {
-      evt.preventDefault();
-      alert(JSON.stringify(this.form));
-    }
-  }
+  components: { LoginForm, SignupForm }
 };
 </script>

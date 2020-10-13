@@ -6,7 +6,7 @@
           <div class="form-icon"><i class="fa fa-user-circle"></i></div>
         </b-input-group-prepend>
         <b-form-input
-          v-model="form.name"
+          v-model="form.fullname"
           required
           placeholder="Enter your full name"
         ></b-form-input>
@@ -68,13 +68,23 @@
         </b-form-invalid-feedback>
       </b-input-group>
     </b-form-group>
-    <b-button class="submit-signup" type="submit" variant="primary"
+    <b-button
+      v-if="!this.state.loading"
+      class="submit-signup"
+      :disabled="!(validatePassword && confirmPassword)"
+      type="submit"
+      variant="primary"
       >Signup</b-button
     >
+    <div v-else class=" text-center ">
+      <i class="fa fa-spinner fa-spin"></i>
+    </div>
   </b-form>
 </template>
 
 <script>
+import { validatePassword } from "../helpers";
+
 export default {
   data() {
     return {
@@ -88,8 +98,7 @@ export default {
   },
   computed: {
     validatePassword() {
-      const passLength = this.form.password.length;
-      return !passLength ? null : passLength < 6 ? false : true;
+      return validatePassword(this.form.password);
     },
     confirmPassword() {
       const { password, confirmPassword } = this.form;
@@ -98,12 +107,15 @@ export default {
         : password !== confirmPassword
         ? false
         : true;
+    },
+    state() {
+      return this.$store.state;
     }
   },
   methods: {
     onSubmit(event) {
       event.preventDefault();
-      // alert(JSON.stringify(this.form));
+      this.$store.dispatch("signup", this.form);
     }
   }
 };

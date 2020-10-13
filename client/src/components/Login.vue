@@ -33,14 +33,22 @@
       </b-input-group>
     </b-form-group>
 
-    <b-button class="submit-signup" type="submit" variant="primary"
-      >Login</b-button
+    <b-button
+      v-if="!this.state.loading"
+      class="submit-signup"
+      :disabled="!validatePassword"
+      type="submit"
+      variant="primary"
+      >Signup</b-button
     >
+    <div v-else class=" text-center ">
+      <i class="fa fa-spinner fa-spin"></i>
+    </div>
   </b-form>
 </template>
 
 <script>
-import toastr from "toastr";
+import { validatePassword } from "../helpers";
 
 export default {
   data() {
@@ -48,21 +56,21 @@ export default {
       form: {
         email: "",
         password: ""
-      },
-      loading: false
+      }
     };
   },
   computed: {
     validatePassword() {
-      const passLength = this.form.password.length;
-      return !passLength ? null : passLength < 6 ? false : true;
+      return validatePassword(this.form.password);
+    },
+    state() {
+      return this.$store.state;
     }
   },
   methods: {
     onSubmit(event) {
       event.preventDefault();
-      if (!this.validatePassword) return toastr.error("Password is invalid");
-      toastr.success("Login Successful");
+      this.$store.dispatch("login", this.form);
     }
   }
 };

@@ -4,7 +4,7 @@ const requiredString = { type: String, required: true };
 
 const User = new mongoose.Schema(
   {
-    email: { ...requiredString,  unique: true },
+    email: { ...requiredString, unique: true },
     fullname: requiredString,
     password: requiredString,
   },
