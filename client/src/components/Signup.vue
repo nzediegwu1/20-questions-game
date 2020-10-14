@@ -33,7 +33,7 @@
       <b-input-group class="mb-2">
         <b-input-group-prepend>
           <div class="form-icon">
-            <i style="font-size: 1.7em;" class="fa fa-lock"></i>
+            <i style="font-size: 1.7em" class="fa fa-lock"></i>
           </div>
         </b-input-group-prepend>
         <b-form-input
@@ -53,7 +53,7 @@
       <b-input-group class="mb-2">
         <b-input-group-prepend>
           <div class="form-icon">
-            <i style="font-size: 1.7em;" class="fa fa-lock"></i>
+            <i style="font-size: 1.7em" class="fa fa-lock"></i>
           </div>
         </b-input-group-prepend>
         <b-form-input
@@ -76,7 +76,7 @@
       variant="primary"
       >Signup</b-button
     >
-    <div v-else class=" text-center ">
+    <div v-else class="text-center">
       <i class="fa fa-spinner fa-spin"></i>
     </div>
   </b-form>
@@ -92,8 +92,8 @@ export default {
         fullname: "",
         email: "",
         password: "",
-        confirmPassword: ""
-      }
+        confirmPassword: "",
+      },
     };
   },
   computed: {
@@ -110,13 +110,13 @@ export default {
     },
     state() {
       return this.$store.state;
-    }
+    },
   },
   methods: {
     onSubmit(event) {
       event.preventDefault();
       this.$store.dispatch("signup", this.form);
-    }
-  }
+    },
+  },
 };
 </script>

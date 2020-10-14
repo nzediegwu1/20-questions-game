@@ -7,12 +7,12 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     user: {},
-    loading: false
+    loading: false,
   },
   mutations: {
     setUser(state, payload) {
       state.user = payload;
-    }
+    },
   },
   actions: {
     async signup(store, payload) {
@@ -20,6 +20,6 @@ export default new Vuex.Store({
     },
     async login(store, payload) {
       onboard(store, payload, "login");
-    }
-  }
+    },
+  },
 });

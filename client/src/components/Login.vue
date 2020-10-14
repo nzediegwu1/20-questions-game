@@ -17,7 +17,7 @@
       <b-input-group class="mb-2">
         <b-input-group-prepend>
           <div class="form-icon">
-            <i style="font-size: 1.7em;" class="fa fa-lock"></i>
+            <i style="font-size: 1.7em" class="fa fa-lock"></i>
           </div>
         </b-input-group-prepend>
         <b-form-input
@@ -39,9 +39,9 @@
       :disabled="!validatePassword"
       type="submit"
       variant="primary"
-      >Signup</b-button
+      >Login</b-button
     >
-    <div v-else class=" text-center ">
+    <div v-else class="text-center">
       <i class="fa fa-spinner fa-spin"></i>
     </div>
   </b-form>
@@ -55,8 +55,8 @@ export default {
     return {
       form: {
         email: "",
-        password: ""
-      }
+        password: "",
+      },
     };
   },
   computed: {
@@ -65,13 +65,14 @@ export default {
     },
     state() {
       return this.$store.state;
-    }
+    },
   },
   methods: {
     onSubmit(event) {
       event.preventDefault();
       this.$store.dispatch("login", this.form);
-    }
-  }
+      this.$router.push("/playground");
+    },
+  },
 };
 </script>

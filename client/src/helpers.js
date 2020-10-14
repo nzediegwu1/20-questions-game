@@ -7,7 +7,7 @@ toastr.options = {
   showEasing: "swing",
   hideEasing: "linear",
   showMethod: "fadeIn",
-  hideMethod: "fadeOut"
+  hideMethod: "fadeOut",
 };
 
 export const notify = (toastType, toastMessage) => {
@@ -17,7 +17,7 @@ export const notify = (toastType, toastMessage) => {
 
 export const handleErrors = ({ response, message }) => {
   if (response) {
-    return response.data.errors.forEach(error => {
+    return response.data.errors.forEach((error) => {
       notify("error", error);
     });
   }
@@ -25,7 +25,7 @@ export const handleErrors = ({ response, message }) => {
 };
 
 export const client = axios.create({
-  baseURL: process.env.VUE_APP_BASE_URL
+  baseURL: process.env.VUE_APP_BASE_URL,
   /* other custom settings */
 });
 
