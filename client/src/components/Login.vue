@@ -70,8 +70,7 @@ export default {
   methods: {
     onSubmit(event) {
       event.preventDefault();
-      this.$store.dispatch("login", this.form);
-      this.$router.push("/playground");
+      this.$store.dispatch("login", this);
     },
   },
 };

@@ -38,10 +38,11 @@ export async function onboard(store, payload, type) {
   const { commit, state } = store;
   state.loading = true;
   try {
-    const { data } = await client.post(`/${type}`, payload);
+    const { data } = await client.post(`/${type}`, payload.form);
     localStorage.token = data.data.token;
     commit("setUser", data.data.user);
     notify("success", data.message);
+    payload.$router.push("/playground");
   } catch (error) {
     handleErrors(error);
   }
