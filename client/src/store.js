@@ -8,10 +8,14 @@ export default new Vuex.Store({
   state: {
     user: {},
     loading: false,
+    onlineUsers: [],
   },
   mutations: {
     setUser(state, payload) {
       state.user = payload;
+    },
+    setOnlineUsers(state, payload) {
+      state.onlineUsers = payload;
     },
   },
   actions: {

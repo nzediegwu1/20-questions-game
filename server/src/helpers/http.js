@@ -1,9 +1,8 @@
-const error = 'An error occured';
 
-export const response = ({ res, code = 200, message = error, data, errors }) =>
+export const response = ({ res, code = 200, message, data, errors }) =>
   res.status(code).json({ message, data, errors });
 
-class CustomError extends Error {
+export class CustomError extends Error {
   constructor(message, code) {
     super(message);
     this.code = code;
@@ -20,7 +19,7 @@ const resolve = action => async (req, res) => {
   try {
     return await action(req, res);
   } catch ({ message, code }) {
-    return response({ res, code: code || 500, errors: [message] });
+    return response({ res, code: code < 600 ? code : 500, errors: [message] });
   }
 };
 
@@ -29,3 +28,4 @@ export const resolver = controller =>
     result[key] = resolve(value);
     return result;
   }, {});
+

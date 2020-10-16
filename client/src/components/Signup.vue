@@ -1,15 +1,20 @@
 <template>
   <b-form class="login-form" @submit="onSubmit">
-    <b-form-group label="Full Name">
+    <b-form-group label="Nickname">
       <b-input-group class="mb-2">
         <b-input-group-prepend>
           <div class="form-icon"><i class="fa fa-user-circle"></i></div>
         </b-input-group-prepend>
         <b-form-input
-          v-model="form.fullname"
+          v-model="form.nickname"
           required
-          placeholder="Enter your full name"
+          placeholder="Enter your nickname"
+          :state="validateNickname"
+          aria-describedby="nickname-feedback"
         ></b-form-input>
+        <b-form-invalid-feedback id="nickname-feedback">
+          Nickname should be less than 21 characters
+        </b-form-invalid-feedback>
       </b-input-group>
     </b-form-group>
 
@@ -71,7 +76,7 @@
     <b-button
       v-if="!this.state.loading"
       class="submit-signup"
-      :disabled="!(validatePassword && confirmPassword)"
+      :disabled="!(validatePassword && confirmPassword && validateNickname)"
       type="submit"
       variant="primary"
       >Signup</b-button
@@ -89,7 +94,7 @@ export default {
   data() {
     return {
       form: {
-        fullname: "",
+        nickname: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -99,6 +104,10 @@ export default {
   computed: {
     validatePassword() {
       return validatePassword(this.form.password);
+    },
+    validateNickname() {
+      const length = this.form.nickname.trim().length;
+      return !length ? null : length < 21 ? true : false;
     },
     confirmPassword() {
       const { password, confirmPassword } = this.form;
@@ -115,7 +124,7 @@ export default {
   methods: {
     onSubmit(event) {
       event.preventDefault();
-      this.$store.dispatch("signup", this.form);
+      this.$store.dispatch("signup", this);
     },
   },
 };

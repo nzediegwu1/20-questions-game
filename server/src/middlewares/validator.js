@@ -30,14 +30,14 @@ export const validateLogin = [
 
 export const validateSignup = [
   ...validateLogin,
-  check('fullname')
+  check('nickname')
     .isString()
-    .withMessage('Fullname is required')
+    .withMessage('Nickname is required')
     .trim()
     .not()
     .isEmpty()
-    .withMessage('Fullname should not be empty')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Fullname should be at least 6 characters and not more than 50'),
+    .withMessage('Nickname should not be empty')
+    .isLength({ min: 2, max: 20 })
+    .withMessage('Nickname should be at least 2 characters but not more than 20'),
 ];
 

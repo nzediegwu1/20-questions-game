@@ -1,5 +1,6 @@
 import toastr from "toastr";
 import axios from "axios";
+import cookie from "js-cookie";
 
 toastr.options = {
   closeButton: true,
@@ -39,7 +40,7 @@ export async function onboard(store, payload, type) {
   state.loading = true;
   try {
     const { data } = await client.post(`/${type}`, payload.form);
-    localStorage.token = data.data.token;
+    cookie.set("token", data.data.token);
     commit("setUser", data.data.user);
     notify("success", data.message);
     payload.$router.push("/playground");

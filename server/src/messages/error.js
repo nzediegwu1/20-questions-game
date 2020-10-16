@@ -7,4 +7,5 @@ export const authErrors = {
   unauthorized: 'Unauthorized! Please login to perform this operation',
   sessionExpired: 'Your session has expired, please login again to continue',
   invalidAuth: 'Invalid auth, please login again to continue',
+  alreadyLoggedIn: 'Already logged in on a different browser',
 };

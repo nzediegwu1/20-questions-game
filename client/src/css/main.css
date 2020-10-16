@@ -12,7 +12,7 @@
 }
 #portal {
   background-image: url('https://source.unsplash.com/random/play'); /* The image used */
-  background-color: #343a40;; /* Used if the image is unavailable */
+  background-color: #343a40; /* Used if the image is unavailable */
   height: 100vh;
   width: 100%;
   margin: auto;
@@ -41,5 +41,17 @@
 
 .login-form {
   width: 95%;
+  margin: auto;
+}
+.list-group {
+  color: black;
+  border-radius: unset;
+}
+
+.online-users img {
+  width: 4em;
+}
+.invite-button {
+  float: right;
   margin: auto;
 }

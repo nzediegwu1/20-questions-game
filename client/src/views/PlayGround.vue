@@ -8,8 +8,16 @@
 </template>
 
 <script>
+import cookie from "js-cookie";
 import { Sidebar } from "../components";
+
 export default {
   components: { Sidebar },
+
+  mounted() {
+    if (!cookie.get("token")) {
+      this.$router.push("/");
+    }
+  },
 };
 </script>
