@@ -15,9 +15,13 @@
 </template>
 
 <script>
+import cookie from "js-cookie";
 import { LoginForm, SignupForm } from "../components";
 
 export default {
   components: { LoginForm, SignupForm },
+  mounted() {
+    if (cookie.get("token")) this.$router.push("/playground");
+  },
 };
 </script>

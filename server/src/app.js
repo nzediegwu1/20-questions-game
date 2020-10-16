@@ -56,7 +56,7 @@ io.on('connection', async (socket) => {
     const { _id: user } = jwt.decode(cookies.token);
     await OnlineUsers.findOneAndUpdate(
       { user },
-      { user }, { new: true, upsert: true },
+      { $inc: { connections: 1 } }, { upsert: true },
     );
     refreshOnlineUsers();
   }
@@ -69,7 +69,12 @@ io.on('connection', async (socket) => {
 
     if (xCookies.token) {
       const { _id: user } = jwt.decode(xCookies.token);
-      await OnlineUsers.deleteOne({ user });
+      const gamer = await OnlineUsers.findOneAndUpdate(
+        { user },
+        { $inc: { connections: -1 } },
+        { new: true },
+      );
+      if (gamer && !gamer.connections) await OnlineUsers.deleteOne({ user });
       refreshOnlineUsers();
     }
   });

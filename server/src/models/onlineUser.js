@@ -8,6 +8,7 @@ const OnlineUser = new Schema(
       required: true,
       unique: true,
     },
+    connections: { type: Number, required: true, default: 1 },
   },
   {
     timestamps: true,
