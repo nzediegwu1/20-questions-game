@@ -1,6 +1,7 @@
 export const userErrors = {
   invalidUser: 'Invalid email or password',
   alreadyExists: 'Email already in use',
+  notFound: 'User not found',
 };
 
 export const authErrors = {

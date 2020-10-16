@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { OnlineUsers, Users } from '../models';
-import { response, resolver, CustomError } from '../helpers/http';
+import { response, resolver, CustomError, existsOr404 } from '../helpers/http';
 import { authErrors, userErrors, userSuccess } from '../messages';
 import { generateToken } from '../helpers/auth';
 import { refreshOnlineUsers } from '../helpers/utils';
@@ -52,6 +52,12 @@ const UserController = {
       message: userSuccess.login,
       data: { token: generateToken(user._doc), user },
     });
+  },
+  async getOne(req, res) {
+    const { id } = req.params;
+    const data = await Users.findById(id).select('-password -__v');
+    existsOr404(data, userErrors.notFound);
+    return response({ res, message: userSuccess.retrieved, data });
   },
   async logout(user) {
     Users.findOneAndUpdate({ _id: user }, { isLogin: false }).exec();

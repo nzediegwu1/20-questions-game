@@ -41,3 +41,10 @@ export const validateSignup = [
     .withMessage('Nickname should be at least 2 characters but not more than 20'),
 ];
 
+
+export const validateID = [
+  check('id')
+    .trim()
+    .isMongoId()
+    .withMessage('Invalid id in parameter'),
+];
