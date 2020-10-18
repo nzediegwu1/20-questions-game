@@ -16,14 +16,7 @@
     "build": "babel src -d src/dist --copy-files --ignore src/dist"
   },
   "dependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.4",
-    "@babel/node": "^7.2.2",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/polyfill": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "@babel/register": "^7.4.4",
-    "babel-watch": "^7.0.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.18.2",
     "cors": "^2.8.5",
@@ -37,7 +30,14 @@
     "volleyball": "^1.4.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/register": "^7.4.4",
+    "babel-watch": "^7.0.0",
     "@babel/plugin-proposal-optional-chaining": "^7.11.0",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
     "babel-eslint": "^10.0.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.9.0"

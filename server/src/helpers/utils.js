@@ -1,13 +1,33 @@
 import { io } from '../app';
 import { OnlineUsers } from '../models';
 
-export const refreshOnlineUsers = async () => io.emit(
-  'onlineUsers',
-  await OnlineUsers.find({}).sort('-updatedAt').populate({
-    path: 'user',
-    select: 'nickname email',
-  }),
-);
+export const refreshOnlineUsers = async () => {
+  const onlineUsers = await OnlineUsers.aggregate([
+    {
+      $group: {
+        _id: '$user',
+        status: { $first: '$status' },
+        playingWith: { $first: '$playingWith' },
+        socketId: { $first: '$socketId' },
+        updatedAt: { $last: '$updatedAt' },
+      },
+    },
+    { $sort: { updatedAt: -1 } },
+    {
+      $lookup: {
+        from: 'users',
+        let: { user: '$_id' },
+        pipeline: [
+          { $match: { $expr: { $eq: ['$_id', '$$user'] } } },
+          { $project: { _id: 0, nickname: 1, email: 1 } },
+        ],
+        as: 'user',
+      },
+    },
+    { $unwind: '$user' },
+  ]);
+  return io.emit('onlineUsers', onlineUsers);
+};
 
 
 export const generateCookies = (socket) => {
@@ -18,3 +38,5 @@ export const generateCookies = (socket) => {
     return result;
   }, {});
 };
+
+export const requiredString = { type: String, required: true };

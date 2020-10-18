@@ -15,7 +15,7 @@ import UserController from './controllers/users';
 import { generateCookies, refreshOnlineUsers } from './helpers/utils';
 
 const { MONGODB_URL } = config;
-
+const { ObjectId } = mongoose.SchemaTypes;
 
 // Set up the express app
 const app = express();
@@ -54,27 +54,43 @@ io.on('connection', async (socket) => {
 
   if (cookies.token) {
     const { _id: user } = jwt.decode(cookies.token);
-    await OnlineUsers.findOneAndUpdate(
-      { user },
-      { $inc: { connections: 1 } }, { upsert: true },
-    );
+    await OnlineUsers.create({ user, socketId: socket.id });
     refreshOnlineUsers();
   }
   socket.on('userLeft', (user) => {
-    UserController.logout(user._id);
+    UserController.onLogout(user._id, socket.id);
+  });
+  socket.on('userOnboard', (user) => {
+    UserController.onLoginSignup(user._id, socket.id);
+  });
+  socket.on('inviteUser', async (invitee) => {
+    const inviteCookie = generateCookies(socket);
+
+    if (inviteCookie.token) {
+      const inviteeTabs = await OnlineUsers.find({ user: invitee });
+      const sender = jwt.decode(inviteCookie.token);
+
+      inviteeTabs.forEach(({ socketId }) => {
+        io.to(socketId).emit('inviteToPlay', { ...sender, socketId: socket.id });
+      });
+    }
   });
   socket.on('disconnect', async () => {
     console.log('Client disconnected');
     const xCookies = generateCookies(socket);
 
     if (xCookies.token) {
-      const { _id: user } = jwt.decode(xCookies.token);
-      const gamer = await OnlineUsers.findOneAndUpdate(
-        { user },
-        { $inc: { connections: -1 } },
-        { new: true },
-      );
-      if (gamer && !gamer.connections) await OnlineUsers.deleteOne({ user });
+      const current = await OnlineUsers.findOneAndDelete({ socketId: socket.id });
+      if (current?.status === 'playing') {
+        OnlineUsers.updateMany(
+          { user: { $in: [ObjectId(current.playingWith), ObjectId(current.user)] } },
+          { status: 'online' },
+        ).exec();
+        const peer = await OnlineUsers.find({ user: current.playingWith });
+        peer.forEach(({ socketId }) => {
+          io.to(socketId).emit('playerLeft', 'Your challenger left. Game over!');
+        });
+      }
       refreshOnlineUsers();
     }
   });

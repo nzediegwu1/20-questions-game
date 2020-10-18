@@ -40,10 +40,14 @@ export async function onboard(store, payload, type) {
   state.loading = true;
   try {
     const { data } = await client.post(`/${type}`, payload.form);
-    cookie.set("token", data.data.token);
-    commit("setUser", data.data.user);
+    const response = data.data;
+
+    cookie.set("token", response.token);
+    commit("setUser", response.user);
     notify("success", data.message);
+
     payload.$router.push("/playground");
+    payload.$socket.emit("userOnboard", response.user);
   } catch (error) {
     handleErrors(error);
   }

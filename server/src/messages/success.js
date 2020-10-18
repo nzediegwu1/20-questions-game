@@ -3,4 +3,5 @@ export const userSuccess = {
   signup: 'Successfully created your account',
   login: 'Login successful',
   retrieved: 'Successfully retrieved user details',
+  inviteSent: 'Successfully sent invites',
 };

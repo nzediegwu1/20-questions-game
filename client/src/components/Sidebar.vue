@@ -2,7 +2,6 @@
   <div>
     <b-button v-b-toggle.sidebar-variant variant="success">
       <i class="fa fa-play"> Play</i>
-      <!-- <i class="fa fa-circle"></i> -->
     </b-button>
     <b-sidebar
       id="sidebar-variant"
@@ -23,8 +22,14 @@
         <b-list-group-item :key="item._id" v-for="item of onlineUserList"
           ><img
             src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairNotTooLong&accessoriesType=Prescription01&hairColor=BrownDark&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light"
-          />{{ item.user.nickname }}</b-list-group-item
-        >
+          />{{ item.user.nickname }}
+          <b-button
+            class="invite-button"
+            size="sm"
+            @click="() => inviteUser(item._id)"
+            >Invite</b-button
+          >
+        </b-list-group-item>
       </b-list-group>
     </b-sidebar>
   </div>
@@ -42,21 +47,21 @@ export default {
       notify("success", "Logout successful");
       cookie.remove("token");
     },
+    inviteUser(invitee) {
+      this.$socket.emit("inviteUser", invitee);
+      notify("info", "Game invite sent");
+    },
   },
   computed: {
     onlineUserList() {
-      return this.$store.state.onlineUsers;
+      const { user, onlineUsers } = this.$store.state;
+      return onlineUsers.filter((item) => item._id !== user._id);
     },
   },
   sockets: {
     onlineUsers: function (users) {
       this.$store.commit("setOnlineUsers", users);
     },
-    // customEmit: function (data) {
-    //   console.log(
-    //     'this method was fired by the socket server. eg: io.emit("customEmit", data)'
-    //   );
-    // },
   },
   mounted() {
     this.$store.dispatch("getCurrentUser");

@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { requiredString } from '../helpers/utils';
 
 const OnlineUser = new Schema(
   {
@@ -6,9 +7,17 @@ const OnlineUser = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      unique: true,
     },
-    connections: { type: Number, required: true, default: 1 },
+    status: {
+      ...requiredString,
+      enum: ['online', 'invited', 'playing'],
+      default: 'online',
+    },
+    socketId: requiredString,
+    playingWith: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,

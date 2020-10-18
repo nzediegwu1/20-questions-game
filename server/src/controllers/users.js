@@ -4,6 +4,7 @@ import { response, resolver, CustomError, existsOr404 } from '../helpers/http';
 import { authErrors, userErrors, userSuccess } from '../messages';
 import { generateToken } from '../helpers/auth';
 import { refreshOnlineUsers } from '../helpers/utils';
+import { io } from '../app';
 
 const UserController = {
   async signup(req, res) {
@@ -20,8 +21,6 @@ const UserController = {
       isLogin: true,
       password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
     });
-    await OnlineUsers.create({ user: newUser._id });
-    refreshOnlineUsers();
 
     delete newUser._doc.password;
     return response({
@@ -41,11 +40,6 @@ const UserController = {
     }
     if (user.isLogin) throw new CustomError(authErrors.alreadyLoggedIn, 401);
 
-    const query = { user: user._id };
-    Users.updateOne({ _id: user._id }, { isLogin: true }).exec();
-    await OnlineUsers.create(query);
-    refreshOnlineUsers();
-
     delete user._doc.password;
     return response({
       res,
@@ -59,9 +53,14 @@ const UserController = {
     existsOr404(data, userErrors.notFound);
     return response({ res, message: userSuccess.retrieved, data });
   },
-  async logout(user) {
+  async onLogout(user) {
     Users.findOneAndUpdate({ _id: user }, { isLogin: false }).exec();
-    await OnlineUsers.deleteOne({ user });
+    await OnlineUsers.deleteMany({ user });
+    refreshOnlineUsers();
+  },
+  async onLoginSignup(user, socketId) {
+    Users.updateOne({ _id: user._id }, { isLogin: true }).exec();
+    await OnlineUsers.create({ user, socketId });
     refreshOnlineUsers();
   },
 };

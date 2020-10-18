@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
+import { requiredString } from '../helpers/utils';
 
-const requiredString = { type: String, required: true };
 
 const User = new mongoose.Schema(
   {
