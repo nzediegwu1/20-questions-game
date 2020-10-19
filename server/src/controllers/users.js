@@ -4,7 +4,6 @@ import { response, resolver, CustomError, existsOr404 } from '../helpers/http';
 import { authErrors, userErrors, userSuccess } from '../messages';
 import { generateToken } from '../helpers/auth';
 import { refreshOnlineUsers } from '../helpers/utils';
-import { io } from '../app';
 
 const UserController = {
   async signup(req, res) {
@@ -47,9 +46,9 @@ const UserController = {
       data: { token: generateToken(user._doc), user },
     });
   },
-  async getOne(req, res) {
-    const { id } = req.params;
-    const data = await Users.findById(id).select('-password -__v');
+  async currentUser(req, res) {
+    const { _id: userId } = req.user;
+    const data = await Users.findById(userId).select('-password -__v');
     existsOr404(data, userErrors.notFound);
     return response({ res, message: userSuccess.retrieved, data });
   },

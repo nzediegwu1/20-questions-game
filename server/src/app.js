@@ -13,9 +13,9 @@ import config from './config';
 import { OnlineUsers } from './models';
 import UserController from './controllers/users';
 import { generateCookies, refreshOnlineUsers } from './helpers/utils';
+import { gameFail } from './messages/success';
 
 const { MONGODB_URL } = config;
-const { ObjectId } = mongoose.SchemaTypes;
 
 // Set up the express app
 const app = express();
@@ -24,7 +24,10 @@ app.use(cors());
 // Log requests to the console.
 app.use(volleyball);
 // Mongo Connection Set-Up
-mongoose.connect(MONGODB_URL, { useFindAndModify: false, useNewUrlParser: true });
+mongoose.connect(MONGODB_URL, {
+  useFindAndModify: false,
+  useNewUrlParser: true,
+});
 mongoose.Promise = global.Promise;
 
 // Get the default connection
@@ -40,9 +43,7 @@ app.use(bodyParser.json());
 app.use('/', routes);
 
 // Setup a default catch-all route that sends back a welcome message in JSON format.
-app.get('*', (_, res) =>
-  res.status(404).json({ message: 'Page not found' }));
-
+app.get('*', (_, res) => res.status(404).json({ message: 'Page not found' }));
 
 export const http = HTTP.createServer(app);
 
@@ -71,7 +72,10 @@ io.on('connection', async (socket) => {
       const sender = jwt.decode(inviteCookie.token);
 
       inviteeTabs.forEach(({ socketId }) => {
-        io.to(socketId).emit('inviteToPlay', { ...sender, socketId: socket.id });
+        io.to(socketId).emit('inviteToPlay', {
+          ...sender,
+          socketId: socket.id,
+        });
       });
     }
   });
@@ -80,15 +84,17 @@ io.on('connection', async (socket) => {
     const xCookies = generateCookies(socket);
 
     if (xCookies.token) {
-      const current = await OnlineUsers.findOneAndDelete({ socketId: socket.id });
+      const current = await OnlineUsers.findOneAndDelete({
+        socketId: socket.id,
+      });
       if (current?.status === 'playing') {
         OnlineUsers.updateMany(
-          { user: { $in: [ObjectId(current.playingWith), ObjectId(current.user)] } },
-          { status: 'online' },
+          { user: { $in: [current.playingWith, current.user] } },
+          { status: 'online' }
         ).exec();
         const peer = await OnlineUsers.find({ user: current.playingWith });
         peer.forEach(({ socketId }) => {
-          io.to(socketId).emit('playerLeft', 'Your challenger left. Game over!');
+          io.to(socketId).emit('playerLeft', gameFail.userLeft);
         });
       }
       refreshOnlineUsers();

@@ -26,6 +26,9 @@
           <b-button
             class="invite-button"
             size="sm"
+            :disabled="
+              item.status === 'playing' || currentUser.status === 'playing'
+            "
             @click="() => inviteUser(item._id)"
             >Invite</b-button
           >
@@ -56,6 +59,12 @@ export default {
     onlineUserList() {
       const { user, onlineUsers } = this.$store.state;
       return onlineUsers.filter((item) => item._id !== user._id);
+    },
+    currentUser() {
+      const { user, onlineUsers } = this.$store.state;
+      return onlineUsers.find(
+        (item) => item._id.toString() === user._id.toString()
+      );
     },
   },
   sockets: {

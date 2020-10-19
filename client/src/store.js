@@ -1,9 +1,7 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import cookie from "js-cookie";
-import jwt from "jsonwebtoken";
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-import { client, handleErrors, onboard } from "./helpers";
+import { client, handleErrors, notify, onboard } from './helpers';
 
 Vue.use(Vuex);
 
@@ -23,19 +21,24 @@ export default new Vuex.Store({
   },
   actions: {
     async signup(store, payload) {
-      onboard(store, payload, "signup");
+      onboard(store, payload, 'signup');
     },
     async login(store, payload) {
-      onboard(store, payload, "login");
+      onboard(store, payload, 'login');
     },
     async getCurrentUser(store) {
-      const token = cookie.get("token");
-      if (!token) return;
-      const { _id: userId } = jwt.decode(token);
-      client
-        .get(`/users/${userId}`)
+      return client
+        .get(`/currentUser`)
         .then(({ data }) => {
           store.state.user = data.data;
+        })
+        .catch((error) => handleErrors(error));
+    },
+    async acceptInvite(_, payload) {
+      return client
+        .post('/acceptInvite', payload)
+        .then(({ data }) => {
+          notify('success', data.message);
         })
         .catch((error) => handleErrors(error));
     },

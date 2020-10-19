@@ -10,7 +10,7 @@ const OnlineUser = new Schema(
     },
     status: {
       ...requiredString,
-      enum: ['online', 'invited', 'playing'],
+      enum: ['online', 'playing'],
       default: 'online',
     },
     socketId: requiredString,

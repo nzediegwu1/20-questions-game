@@ -1,18 +1,19 @@
 <template>
-  <b-modal title="Game Invite" hide-footer v-model="modalShow">
-    <h6 class="text-center">
-      You have been invited to play by {{ sender.nickname }}
-    </h6>
+  <b-modal hide-footer v-model="modalShow">
+    <template #modal-header="">
+      <h5>Game Invite</h5>
+    </template>
+    <h6 class="text-center">{{ sender.nickname }} invited you to play</h6>
     <br />
     <b-container>
       <b-row>
         <b-col
-          ><b-button block variant="success" @click="toggleModal"
+          ><b-button block variant="success" @click="actions.acceptInvite"
             >Accept</b-button
           ></b-col
         >
         <b-col>
-          <b-button block variant="danger" @click="toggleModal"
+          <b-button block variant="danger" @click="actions.toggleModal"
             >Reject</b-button
           ></b-col
         >
@@ -23,6 +24,6 @@
 
 <script>
 export default {
-  props: ["modalShow", "sender", "toggleModal"],
+  props: ["modalShow", "sender", "actions"],
 };
 </script>

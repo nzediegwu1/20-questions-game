@@ -32,7 +32,7 @@ export const refreshOnlineUsers = async () => {
 
 export const generateCookies = (socket) => {
   const { cookie } = socket.request.headers;
-  const cookieArray = cookie.split(/=|;\s+/g);
+  const cookieArray = cookie?.split(/=|;\s+/g) || [];
   return cookieArray.reduce((result, current, index) => {
     if (index % 2 === 0) result[current] = cookieArray[index + 1];
     return result;

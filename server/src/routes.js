@@ -1,13 +1,19 @@
 import express from 'express';
-import users from './controllers/users';
-import { validateLogin, validateSignup, validateID, handleValidation } from './middlewares/validator';
+import { User, Game } from './controllers';
+import {
+  validateLogin,
+  validateSignup,
+  handleValidation,
+} from './middlewares/validator';
+import loginRequired from './middlewares/loginRequired';
 
 const app = express.Router();
 
 app.get('/', (_, res) => res.status(200).send('Welcome 20 words game api'));
 
-app.post('/signup', validateSignup, handleValidation, users.signup);
-app.post('/login', validateLogin, handleValidation, users.login);
-app.get('/users/:id', validateID, handleValidation, users.getOne);
+app.post('/signup', validateSignup, handleValidation, User.signup);
+app.post('/login', validateLogin, handleValidation, User.login);
+app.get('/currentUser', loginRequired, User.currentUser);
+app.post('/acceptInvite', loginRequired, Game.acceptInvite);
 
 export default app;

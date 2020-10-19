@@ -5,3 +5,11 @@ export const userSuccess = {
   retrieved: 'Successfully retrieved user details',
   inviteSent: 'Successfully sent invites',
 };
+
+export const gameSuccess = {
+  acceptInvite: 'Game Invite Accepted!',
+};
+
+export const gameFail = {
+  userLeft: 'Your challenger left. Game over!',
+};
