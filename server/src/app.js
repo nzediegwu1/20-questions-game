@@ -59,7 +59,7 @@ io.on('connection', async (socket) => {
     refreshOnlineUsers();
   }
   socket.on('userLeft', (user) => {
-    UserController.onLogout(user._id, socket.id);
+    UserController.onLogout(user, socket.id);
   });
   socket.on('userOnboard', (user) => {
     UserController.onLoginSignup(user._id, socket.id);
@@ -94,7 +94,6 @@ io.on('connection', async (socket) => {
         ).exec(() => refreshOnlineUsers());
         const peer = await OnlineUsers.find({ user: current.playingWith });
         peer.forEach(({ socketId }) => {
-          io.to(socketId).emit('playerLeft', gameFail.userLeft);
           io.to(socketId).emit('receiverAccepted', false);
         });
       }

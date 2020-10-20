@@ -4,6 +4,7 @@ import { response, resolver, CustomError, existsOr404 } from '../helpers/http';
 import { authErrors, userErrors, userSuccess } from '../messages';
 import { generateToken } from '../helpers/auth';
 import { refreshOnlineUsers } from '../helpers/utils';
+import { io } from '../app';
 
 const UserController = {
   async signup(req, res) {
@@ -53,14 +54,25 @@ const UserController = {
     return response({ res, message: userSuccess.retrieved, data });
   },
   async onLogout(user) {
-    Users.findOneAndUpdate({ _id: user }, { isLogin: false }).exec();
-    await OnlineUsers.deleteMany({ user });
-    refreshOnlineUsers();
+    Users.findOneAndUpdate({ _id: user._id }, { isLogin: false }).exec();
+    await OnlineUsers.deleteMany({ user: user._id });
+    io.emit('playerLeft', user);
+    if (user.status === 'playing') {
+      OnlineUsers.updateMany(
+        { user: user.playingWith },
+        { status: 'online' }
+      ).exec(() => refreshOnlineUsers());
+      const peer = await OnlineUsers.find({ user: user.playingWith });
+      return peer.forEach(({ socketId }) => {
+        io.to(socketId).emit('receiverAccepted', false);
+      });
+    }
+    return refreshOnlineUsers();
   },
   async onLoginSignup(user, socketId) {
-    Users.updateOne({ _id: user._id }, { isLogin: true }).exec();
-    await OnlineUsers.create({ user, socketId });
-    refreshOnlineUsers();
+    Users.updateOne({ _id: user }, { isLogin: true }).exec(() =>
+      OnlineUsers.create({ user, socketId }).then(() => refreshOnlineUsers())
+    );
   },
 };
 

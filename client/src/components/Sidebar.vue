@@ -45,7 +45,7 @@ import { currentUser, notify } from "../helpers";
 export default {
   methods: {
     logout() {
-      this.$socket.emit("userLeft", this.$store.state.user);
+      this.$socket.emit("userLeft", this.currentUser);
       this.$router.push("/");
       notify("success", "Logout successful");
       cookie.remove("token");

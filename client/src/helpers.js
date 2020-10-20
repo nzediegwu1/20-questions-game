@@ -1,14 +1,14 @@
-import toastr from 'toastr';
-import axios from 'axios';
-import cookie from 'js-cookie';
+import toastr from "toastr";
+import axios from "axios";
+import cookie from "js-cookie";
 
 toastr.options = {
   closeButton: true,
-  positionClass: 'toast-top-center',
-  showEasing: 'swing',
-  hideEasing: 'linear',
-  showMethod: 'fadeIn',
-  hideMethod: 'fadeOut',
+  positionClass: "toast-top-center",
+  showEasing: "swing",
+  hideEasing: "linear",
+  showMethod: "fadeIn",
+  hideMethod: "fadeOut",
 };
 
 export const notify = (toastType, toastMessage) => {
@@ -19,16 +19,16 @@ export const notify = (toastType, toastMessage) => {
 export const handleErrors = ({ response, message }) => {
   if (response) {
     return response.data.errors.forEach((error) => {
-      notify('error', error);
+      notify("error", error);
     });
   }
-  return notify('error', message);
+  return notify("error", message);
 };
 
 export const client = axios.create({
   baseURL: process.env.VUE_APP_BASE_URL,
   headers: {
-    token: cookie.get('token'),
+    token: cookie.get("token"),
   },
   /* other custom settings */
 });
@@ -41,16 +41,20 @@ export function validatePassword(password) {
 export async function onboard(store, payload, type) {
   const { commit, state } = store;
   state.loading = true;
+  if (cookie.get("token")) {
+    notify("warning", `Already logged in as ${state.user.nickname}`);
+    return payload.$router.push("/playground");
+  }
   try {
     const { data } = await client.post(`/${type}`, payload.form);
     const response = data.data;
 
-    cookie.set('token', response.token);
-    commit('setUser', response.user);
-    notify('success', data.message);
+    cookie.set("token", response.token);
+    commit("setUser", response.user);
+    notify("success", data.message);
 
-    payload.$router.push('/playground');
-    payload.$socket.emit('userOnboard', response.user);
+    payload.$socket.emit("userOnboard", response.user);
+    payload.$router.push("/playground");
   } catch (error) {
     handleErrors(error);
   }

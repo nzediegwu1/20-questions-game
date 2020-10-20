@@ -7,32 +7,37 @@
     >
       Game dashboard for Inviter
     </div>
-    <div
+    <b-container
       v-else-if="inviteAccepted && currentUser.status === 'playing'"
       class="text-center"
     >
       Game dashboard for Invitee
-    </div>
-    <div class="text-center instructions" v-else>
-      <h2>Game Instructions</h2>
-      <p>
-        <i class="fa fa-star"></i> Click <b> Play</b> button at the top left
-        <b-button variant="success" size="sm"
-          ><i class="fa fa-play"> Play</i></b-button
-        >
-      </p>
-      <p><i class="fa fa-star"></i> Invite a player to play with you</p>
-      <p><i class="fa fa-star"></i> Guess what the player thinks</p>
-      <p>
-        <i class="fa fa-star"></i> If you guess right? <b>You win!</b
-        ><i class="fa fa-smile-o"></i>
-      </p>
-      <p>
-        <i class="fa fa-star"></i> If you don't guess right after 20 attempts,
-        <b>You Loose</b><i class="fa fa-frown-o"></i>
-      </p>
-      <h5>Game over!</h5>
-    </div>
+      <b-row class="text-center">
+        <b-col
+          ><b-card header="Think of a word" header-tag="header">
+            <b-form class="login-form">
+              <b-form-group description="Your Listener Will Guess Your Word">
+                <b-input-group class="mb-2">
+                  <b-input-group-prepend>
+                    <div class="form-icon"><i class="fa fa-envelope"></i></div>
+                  </b-input-group-prepend>
+                  <b-form-input
+                    type="text"
+                    required
+                    placeholder="Enter your word"
+                  ></b-form-input>
+                </b-input-group>
+              </b-form-group>
+              <b-button class="submit-signup" type="submit" variant="primary"
+                >Save</b-button
+              >
+            </b-form>
+          </b-card>
+        </b-col>
+        <b-col cols="8">2 of 3 (wider)</b-col>
+      </b-row>
+    </b-container>
+    <Instructions v-else />
     <invite-modal
       :modalShow="modalShow"
       :sender="sender"
@@ -43,11 +48,11 @@
 
 <script>
 import cookie from "js-cookie";
-import { Sidebar, InviteModal } from "../components";
+import { Sidebar, InviteModal, Instructions } from "../components";
 import { currentUser, notify } from "../helpers";
 
 export default {
-  components: { Sidebar, InviteModal },
+  components: { Sidebar, InviteModal, Instructions },
   data() {
     return {
       inviteAccepted: false,
@@ -96,6 +101,12 @@ export default {
     },
     receiverAccepted(status) {
       this.receiverAccepted = status;
+    },
+    playerLeft(leftPlayer) {
+      const { user } = this.$store.state;
+      console.log("me=====", user);
+      console.log("leftPlayer=====", leftPlayer);
+      if (user._id == leftPlayer._id) this.$router.push("/");
     },
   },
 };

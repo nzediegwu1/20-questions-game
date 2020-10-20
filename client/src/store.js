@@ -1,7 +1,7 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
 
-import { client, handleErrors, notify, onboard } from './helpers';
+import { client, handleErrors, notify, onboard } from "./helpers";
 
 Vue.use(Vuex);
 
@@ -21,10 +21,10 @@ export default new Vuex.Store({
   },
   actions: {
     async signup(store, payload) {
-      onboard(store, payload, 'signup');
+      onboard(store, payload, "signup");
     },
     async login(store, payload) {
-      onboard(store, payload, 'login');
+      onboard(store, payload, "login");
     },
     async getCurrentUser(store) {
       return client
@@ -36,9 +36,9 @@ export default new Vuex.Store({
     },
     async acceptInvite(_, payload) {
       return client
-        .post('/acceptInvite', payload)
+        .post("/acceptInvite", payload)
         .then(({ data }) => {
-          notify('success', data.message);
+          notify("success", data.message);
         })
         .catch((error) => handleErrors(error));
     },
