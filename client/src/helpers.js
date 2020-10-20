@@ -56,3 +56,7 @@ export async function onboard(store, payload, type) {
   }
   state.loading = false;
 }
+
+export const currentUser = (user, userList) => {
+  return userList.find((item) => item._id.toString() === user._id?.toString());
+};

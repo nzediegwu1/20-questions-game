@@ -1,7 +1,18 @@
 <template>
   <div>
     <Sidebar />
-    <div v-if="inviteAccepted" class="text-center">Game dashboard</div>
+    <div
+      v-if="receiverAccepted && currentUser.status === 'playing'"
+      class="text-center"
+    >
+      Game dashboard for Inviter
+    </div>
+    <div
+      v-else-if="inviteAccepted && currentUser.status === 'playing'"
+      class="text-center"
+    >
+      Game dashboard for Invitee
+    </div>
     <div class="text-center instructions" v-else>
       <h2>Game Instructions</h2>
       <p>
@@ -33,13 +44,14 @@
 <script>
 import cookie from "js-cookie";
 import { Sidebar, InviteModal } from "../components";
-import { notify } from "../helpers";
+import { currentUser, notify } from "../helpers";
 
 export default {
   components: { Sidebar, InviteModal },
   data() {
     return {
       inviteAccepted: false,
+      receiverAccepted: false,
       modalShow: false,
       sender: {},
       listenerSocket: "",
@@ -47,6 +59,12 @@ export default {
   },
   mounted() {
     if (!cookie.get("token")) return this.$router.push("/");
+  },
+  computed: {
+    currentUser() {
+      const { user: me, onlineUsers } = this.$store.state;
+      return currentUser(me, onlineUsers);
+    },
   },
   methods: {
     toggleModal() {
@@ -69,14 +87,15 @@ export default {
   },
   sockets: {
     inviteToPlay(sender) {
-      const { user: current, onlineUsers } = this.$store.state;
-      const currentUser = onlineUsers.find(
-        (user) => user._id.toString() === current._id.toString()
-      );
-      if (currentUser.status === "online") {
+      const { user: me, onlineUsers } = this.$store.state;
+      const user = currentUser(me, onlineUsers);
+      if (user.status === "online") {
         this.modalShow = true;
         this.sender = sender;
       }
+    },
+    receiverAccepted(status) {
+      this.receiverAccepted = status;
     },
   },
 };

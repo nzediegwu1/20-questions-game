@@ -91,13 +91,13 @@ io.on('connection', async (socket) => {
         OnlineUsers.updateMany(
           { user: { $in: [current.playingWith, current.user] } },
           { status: 'online' }
-        ).exec();
+        ).exec(() => refreshOnlineUsers());
         const peer = await OnlineUsers.find({ user: current.playingWith });
         peer.forEach(({ socketId }) => {
           io.to(socketId).emit('playerLeft', gameFail.userLeft);
+          io.to(socketId).emit('receiverAccepted', false);
         });
       }
-      refreshOnlineUsers();
     }
   });
 });

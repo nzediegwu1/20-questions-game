@@ -40,7 +40,7 @@
 
 <script>
 import cookie from "js-cookie";
-import { notify } from "../helpers";
+import { currentUser, notify } from "../helpers";
 
 export default {
   methods: {
@@ -61,10 +61,8 @@ export default {
       return onlineUsers.filter((item) => item._id !== user._id);
     },
     currentUser() {
-      const { user, onlineUsers } = this.$store.state;
-      return onlineUsers.find(
-        (item) => item._id.toString() === user._id.toString()
-      );
+      const { user: me, onlineUsers } = this.$store.state;
+      return currentUser(me, onlineUsers) || {};
     },
   },
   sockets: {

@@ -12,7 +12,7 @@ const GameController = {
     } = req;
     const senderSockets = await OnlineUsers.find({ user: sender });
     senderSockets.forEach((item) => {
-      io.to(item.socketId).emit('inviteAccepted', 'Challenge accepted');
+      io.to(item.socketId).emit('receiverAccepted', true);
     });
     await Promise.all([
       OnlineUsers.updateMany(
