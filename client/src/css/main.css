@@ -55,3 +55,22 @@
   float: right;
   margin: auto;
 }
+
+.instructions p {
+  font-size: large;
+  font-style: italic;
+}
+
+.instructions .btn-success {
+  font-size: 0.5em;
+  padding: 0;
+  padding-right: 1em;
+}
+
+.instructions .fa-play {
+  font-size: large;
+}
+
+.fa-play {
+  font-size: x-large;
+}

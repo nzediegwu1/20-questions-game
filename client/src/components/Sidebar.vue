@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-button v-b-toggle.sidebar-variant variant="success">
+    <b-button squared v-b-toggle.sidebar-variant variant="success">
       <i class="fa fa-play"> Play</i>
     </b-button>
     <b-sidebar
