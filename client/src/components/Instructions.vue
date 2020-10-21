@@ -2,10 +2,10 @@
   <div class="text-center instructions">
     <h2>Game Instructions</h2>
     <p>
-      <i class="fa fa-star"></i> Click <b> Play</b> button at the top left
-      <b-button variant="success" size="sm"
-        ><i class="fa fa-play"> Play</i></b-button
-      >
+      <i class="fa fa-star"></i> Click <b> Menu</b> button at the top left
+      <b-button variant="success" size="sm">
+        <i class="fa fa-bars"></i
+      ></b-button>
     </p>
     <p><i class="fa fa-star"></i> Invite a player to play with you</p>
     <p><i class="fa fa-star"></i> Guess what the player thinks</p>

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-button squared v-b-toggle.sidebar-variant variant="success">
-      <i class="fa fa-play"> Play</i>
+    <b-button squared v-b-toggle.sidebar-variant>
+      <i class="fa fa-bars"></i>
     </b-button>
     <b-sidebar
       id="sidebar-variant"
@@ -39,16 +39,12 @@
 </template>
 
 <script>
-import cookie from "js-cookie";
-import { currentUser, notify } from "../helpers";
+import { currentUser, notify, signOut } from "../helpers";
 
 export default {
   methods: {
     logout() {
-      this.$socket.emit("userLeft", this.currentUser);
-      this.$router.push("/");
-      notify("success", "Logout successful");
-      cookie.remove("token");
+      signOut(this);
     },
     inviteUser(invitee) {
       this.$socket.emit("inviteUser", invitee);

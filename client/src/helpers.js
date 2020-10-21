@@ -1,5 +1,4 @@
 import toastr from "toastr";
-import axios from "axios";
 import cookie from "js-cookie";
 
 toastr.options = {
@@ -25,14 +24,6 @@ export const handleErrors = ({ response, message }) => {
   return notify("error", message);
 };
 
-export const client = axios.create({
-  baseURL: process.env.VUE_APP_BASE_URL,
-  headers: {
-    token: cookie.get("token"),
-  },
-  /* other custom settings */
-});
-
 export function validatePassword(password) {
   const passLength = password.length;
   return !passLength ? null : passLength < 6 ? false : true;
@@ -46,7 +37,7 @@ export async function onboard(store, payload, type) {
     return payload.$router.push("/playground");
   }
   try {
-    const { data } = await client.post(`/${type}`, payload.form);
+    const { data } = await state.client.post(`/${type}`, payload.form);
     const response = data.data;
 
     cookie.set("token", response.token);
@@ -64,3 +55,10 @@ export async function onboard(store, payload, type) {
 export const currentUser = (user, userList) => {
   return userList.find((item) => item._id.toString() === user._id?.toString());
 };
+
+export function signOut(state) {
+  state.$socket.emit("userLeft", state.currentUser);
+  state.$router.push("/");
+  notify("success", "Logout successful");
+  cookie.remove("token");
+}

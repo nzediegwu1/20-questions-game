@@ -1,6 +1,26 @@
 <template>
   <div>
-    <Sidebar />
+    <b-navbar toggleable="sm" type="dark">
+      <Sidebar />
+      <b-navbar-brand href="#"> 20 Questions game</b-navbar-brand>
+
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+      <b-collapse id="nav-collapse" is-nav>
+        <!-- Right aligned nav items -->
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item-dropdown right>
+            <!-- Using 'button-content' slot -->
+            <template #button-content>
+              <b class="text-white">{{ currentUser.user.nickname }}</b>
+            </template>
+            <b-dropdown-item class="text-center" @click="logout" href="#">
+              <i class="fa fa-sign-out"> Logout</i></b-dropdown-item
+            >
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
     <div
       v-if="receiverAccepted && currentUser.status === 'playing'"
       class="text-center"
@@ -49,7 +69,7 @@
 <script>
 import cookie from "js-cookie";
 import { Sidebar, InviteModal, Instructions } from "../components";
-import { currentUser, notify } from "../helpers";
+import { currentUser, notify, signOut } from "../helpers";
 
 export default {
   components: { Sidebar, InviteModal, Instructions },
@@ -74,6 +94,9 @@ export default {
   methods: {
     toggleModal() {
       this.modalShow = !this.modalShow;
+    },
+    logout() {
+      return signOut(this);
     },
     async acceptInvite() {
       const { onlineUsers } = this.$store.state;
