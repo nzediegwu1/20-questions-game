@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import cookie from "js-cookie";
 import { Instructions, CzarBoard, ListenerBoard, NavBar } from "../components";
 import { currentUser } from "../helpers";
 
@@ -25,9 +24,6 @@ export default {
     return {
       listenerSocket: "",
     };
-  },
-  mounted() {
-    if (!cookie.get("token")) return this.$router.push("/");
   },
   computed: {
     currentUser() {
