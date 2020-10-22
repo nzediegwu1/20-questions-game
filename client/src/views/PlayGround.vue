@@ -1,36 +1,28 @@
 <template>
   <div>
-    <GameNav />
-    <inviter-board
+    <NavBar />
+    <ListenerBoard
       v-if="receiverAccepted && currentUser.status === 'playing'"
     />
-    <InviteeBoard
-      v-else-if="inviteAccepted && currentUser.status === 'playing'"
-    />
+    <CzarBoard v-else-if="inviteAccepted && currentUser.status === 'playing'" />
     <Instructions v-else />
   </div>
 </template>
 
 <script>
 import cookie from "js-cookie";
-import {
-  Instructions,
-  InviteeBoard,
-  InviterBoard,
-  GameNav,
-} from "../components";
+import { Instructions, CzarBoard, ListenerBoard, NavBar } from "../components";
 import { currentUser } from "../helpers";
 
 export default {
   components: {
     Instructions,
-    InviteeBoard,
-    InviterBoard,
-    GameNav,
+    CzarBoard,
+    ListenerBoard,
+    NavBar,
   },
   data() {
     return {
-      receiverAccepted: false,
       listenerSocket: "",
     };
   },
@@ -45,11 +37,14 @@ export default {
     inviteAccepted() {
       return this.$store.state.inviteAccepted;
     },
+    receiverAccepted() {
+      return this.$store.state.receiverAccepted;
+    },
   },
   methods: {},
   sockets: {
     receiverAccepted(status) {
-      this.receiverAccepted = status;
+      this.$store.commit("setReceiverAccepted", status);
     },
     playerLeft(leftPlayer) {
       const { user } = this.$store.state;

@@ -62,3 +62,6 @@ export function signOut(state) {
   notify("success", "Logout successful");
   cookie.remove("token");
 }
+
+export const capitalize = (string) =>
+  string.charAt(0).toUpperCase() + string.slice(1);

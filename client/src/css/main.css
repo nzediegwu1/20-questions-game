@@ -96,3 +96,29 @@
 .container {
   margin-top: 3em;
 }
+.attempts {
+  color: red;
+}
+.answer-text {
+  color: green;
+}
+
+.list-group {
+  max-height: 13em;
+  overflow-y: auto;
+}
+.mx-1 {
+  float: right;
+}
+@media only screen and (max-width: 414px) {
+  .col-md-8 {
+    margin-top: 2em;
+  }
+}
+.guess-list {
+  max-height: 23em;
+}
+
+.menu-button {
+  background-color: black;
+}

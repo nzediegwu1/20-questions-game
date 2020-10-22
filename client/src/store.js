@@ -12,7 +12,7 @@ export default new Vuex.Store({
     user: {},
     loading: false,
     onlineUsers: [],
-    showSidebar: false,
+    listenerSocket: "",
     client: axios.create({
       baseURL: process.env.VUE_APP_BASE_URL,
       headers: {
@@ -20,6 +20,7 @@ export default new Vuex.Store({
       },
     }),
     inviteAccepted: false,
+    receiverAccepted: false,
   },
   mutations: {
     setUser(state, payload) {
@@ -31,8 +32,11 @@ export default new Vuex.Store({
     setInviteAccepted(state, payload) {
       state.inviteAccepted = payload;
     },
-    setShowSidebar(state, payload) {
-      state.showSidebar = payload;
+    setListnerSocket(state, payload) {
+      state.listenerSocket = payload;
+    },
+    setReceiverAccepted(state, payload) {
+      state.receiverAccepted = payload;
     },
   },
   actions: {

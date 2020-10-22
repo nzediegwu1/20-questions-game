@@ -13,7 +13,6 @@ import config from './config';
 import { OnlineUsers } from './models';
 import UserController from './controllers/users';
 import { generateCookies, refreshOnlineUsers } from './helpers/utils';
-import { gameFail } from './messages/success';
 
 const { MONGODB_URL } = config;
 
@@ -78,6 +77,31 @@ io.on('connection', async (socket) => {
         });
       });
     }
+  });
+  socket.on('wordDispatched', ({ listenerSocket }) => {
+    io.to(listenerSocket).emit('wordDispatched', {
+      questionerSocket: socket.id,
+    });
+  });
+  socket.on('guessAnswer', ({ questionerSocket, guessAnswer }) => {
+    io.to(questionerSocket).emit('guessAnswer', guessAnswer);
+  });
+  socket.on('wrongGuess', ({ listenerSocket }) => {
+    io.to(listenerSocket).emit('wrongGuess', 'Your Guess was Incorrect!');
+  });
+  socket.on('gameOver', async ({ to, winner }) => {
+    const current = await OnlineUsers.findOne({ socketId: socket.id });
+    await OnlineUsers.updateMany(
+      { user: { $in: [current.playingWith, current.user] } },
+      { status: 'online' }
+    );
+    refreshOnlineUsers();
+    const message =
+      winner === 'czar'
+        ? 'Listner Failed after 20 attempts. You Win!'
+        : 'Your Guess was Right, You Win!';
+
+    io.to(to).emit('gameOver', message);
   });
   socket.on('disconnect', async () => {
     console.log('Client disconnected');
