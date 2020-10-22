@@ -87,7 +87,10 @@ io.on('connection', async (socket) => {
     io.to(questionerSocket).emit('guessAnswer', guessAnswer);
   });
   socket.on('wrongGuess', ({ listenerSocket }) => {
-    io.to(listenerSocket).emit('wrongGuess', 'Your Guess was Incorrect!');
+    io.to(listenerSocket).emit(
+      'wrongGuess',
+      'Your Guess was Incorrect! Try again'
+    );
   });
   socket.on('gameOver', async ({ to, winner }) => {
     const current = await OnlineUsers.findOne({ socketId: socket.id });

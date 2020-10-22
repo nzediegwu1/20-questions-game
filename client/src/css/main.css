@@ -93,7 +93,7 @@
 .dropdown-item {
   color: red;
 }
-.container {
+.container:not('.invite-action') {
   margin-top: 3em;
 }
 .attempts {
@@ -116,7 +116,7 @@
   }
 }
 .guess-list {
-  max-height: 23em;
+  max-height: 30em;
 }
 
 .menu-button {

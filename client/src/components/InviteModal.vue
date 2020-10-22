@@ -5,7 +5,7 @@
     </template>
     <h6 class="text-center">{{ sender.nickname }} invited you to play</h6>
     <br />
-    <b-container>
+    <b-container class="invite-action">
       <b-row>
         <b-col
           ><b-button block variant="success" @click="actions.acceptInvite"
