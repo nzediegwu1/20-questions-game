@@ -29,7 +29,6 @@ export const refreshOnlineUsers = async () => {
   return io.emit('onlineUsers', onlineUsers);
 };
 
-
 export const generateCookies = (socket) => {
   const { cookie } = socket.request.headers;
   const cookieArray = cookie?.split(/=|;\s+/g) || [];

@@ -11,9 +11,9 @@
   },
   "homepage": "https://github.com/nzediegwu1/20-questions-game#readme",
   "scripts": {
-    "start": "node src/dist/index.js",
-    "dev": "babel-watch src/index.js",
-    "build": "babel src -d src/dist --copy-files --ignore src/dist"
+    "start": "node server/dist/index.js",
+    "dev": "babel-watch server/index.js",
+    "build": "babel server -d server/dist"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",

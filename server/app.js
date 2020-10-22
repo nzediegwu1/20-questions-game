@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import express from 'express';
+import path from 'path';
 import volleyball from 'volleyball';
 import bodyParser from 'body-parser';
 import '@babel/polyfill';
@@ -38,6 +39,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // parse request body content
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '../../client/dist')));
 
 app.use('/', routes);
 
