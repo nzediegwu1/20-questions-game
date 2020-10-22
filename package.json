@@ -13,6 +13,7 @@
   "scripts": {
     "start": "node server/dist/index.js",
     "dev": "babel-watch server/index.js",
+    "heroku-prebuild": "yarn global add @vue/cli@4.5.8",
     "build": "npm-run-all --parallel build-client build-server",
     "build-client": "cd client && yarn build",
     "build-server": "babel server -d server/dist"
