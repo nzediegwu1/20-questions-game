@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
-import cookie from "js-cookie";
+import { client } from "./helpers";
 
 import { handleErrors, notify, onboard } from "./helpers";
 
@@ -13,12 +12,6 @@ export default new Vuex.Store({
     loading: false,
     onlineUsers: [],
     listenerSocket: "",
-    client: axios.create({
-      baseURL: process.env.VUE_APP_BASE_URL,
-      headers: {
-        token: cookie.get("token"),
-      },
-    }),
     inviteAccepted: false,
     receiverAccepted: false,
   },
@@ -47,15 +40,15 @@ export default new Vuex.Store({
       onboard(store, payload, "login");
     },
     async getCurrentUser({ state }) {
-      return state.client
+      return client
         .get(`/currentUser`)
         .then(({ data }) => {
           state.user = data.data;
         })
         .catch((error) => handleErrors(error));
     },
-    async acceptInvite({ state }, payload) {
-      return state.client
+    async acceptInvite(_, payload) {
+      return client
         .post("/acceptInvite", payload)
         .then(({ data }) => {
           notify("success", data.message);

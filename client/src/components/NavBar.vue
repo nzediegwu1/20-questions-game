@@ -1,5 +1,5 @@
 <template>
-  <b-navbar sticky="true" toggleable="sm" type="dark">
+  <b-navbar :sticky="true" toggleable="sm" type="dark">
     <Sidebar />
     <b-navbar-brand href="#"> 20 Questions game</b-navbar-brand>
 

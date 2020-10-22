@@ -41,7 +41,6 @@ export default {
       return this.$store.state.receiverAccepted;
     },
   },
-  methods: {},
   sockets: {
     receiverAccepted(status) {
       this.$store.commit("setReceiverAccepted", status);

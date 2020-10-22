@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import HTTP from 'http';
 import socketsIO from 'socket.io';
+import history from 'connect-history-api-fallback';
 import routes from './routes';
 import config from './config';
 import { OnlineUsers } from './models';
@@ -23,12 +24,17 @@ app.use(cors());
 
 // Log requests to the console.
 app.use(volleyball);
-// Mongo Connection Set-Up
-mongoose.connect(MONGODB_URL, {
-  useFindAndModify: false,
-  useNewUrlParser: true,
-});
-mongoose.Promise = global.Promise;
+
+try {
+  mongoose.connect(MONGODB_URL, {
+    useFindAndModify: false,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  console.log('Database connection successful');
+} catch (error) {
+  console.log('Database connection error: ', error);
+}
 
 // Get the default connection
 const db = mongoose.connection;
@@ -39,9 +45,22 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // parse request body content
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(
+  history({
+    rewrites: [
+      {
+        from: /^\/api\/.*$/,
+        to(context) {
+          return context.parsedUrl.path;
+        },
+      },
+    ],
+  })
+);
 app.use(express.static(path.join(__dirname, '../../client/dist')));
 
-app.use('/', routes);
+app.use('/api', routes);
 
 // Setup a default catch-all route that sends back a welcome message in JSON format.
 app.get('*', (_, res) => res.status(404).json({ message: 'Page not found' }));

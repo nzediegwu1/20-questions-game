@@ -39,7 +39,8 @@
 </template>
 
 <script>
-import { currentUser, notify, signOut } from "../helpers";
+import cookie from "js-cookie";
+import { currentUser, notify, signOut, client } from "../helpers";
 
 export default {
   methods: {
@@ -67,6 +68,8 @@ export default {
     },
   },
   mounted() {
+    if (!cookie.get("token")) return this.$router.push("/");
+    client.defaults.headers = { token: cookie.get("token") };
     this.$store.dispatch("getCurrentUser");
   },
 };
