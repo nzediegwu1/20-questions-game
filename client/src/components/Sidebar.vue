@@ -9,6 +9,7 @@
       bg-variant="dark"
       text-variant="light"
       shadow
+      :v-model="showSidebar"
     >
       <template slot="footer">
         <div class="d-flex bg-dark text-light align-items-center px-3 py-2">
@@ -59,6 +60,9 @@ export default {
     currentUser() {
       const { user: me, onlineUsers } = this.$store.state;
       return currentUser(me, onlineUsers) || {};
+    },
+    showSidebar() {
+      return this.$store.state.showSidebar;
     },
   },
   sockets: {

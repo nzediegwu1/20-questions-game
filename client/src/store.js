@@ -12,12 +12,14 @@ export default new Vuex.Store({
     user: {},
     loading: false,
     onlineUsers: [],
+    showSidebar: false,
     client: axios.create({
       baseURL: process.env.VUE_APP_BASE_URL,
       headers: {
         token: cookie.get("token"),
       },
     }),
+    inviteAccepted: false,
   },
   mutations: {
     setUser(state, payload) {
@@ -25,6 +27,12 @@ export default new Vuex.Store({
     },
     setOnlineUsers(state, payload) {
       state.onlineUsers = payload;
+    },
+    setInviteAccepted(state, payload) {
+      state.inviteAccepted = payload;
+    },
+    setShowSidebar(state, payload) {
+      state.showSidebar = payload;
     },
   },
   actions: {
