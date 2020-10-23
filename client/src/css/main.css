@@ -8,7 +8,7 @@
 
 .login-card {
   margin: auto;
-  width: 500px;
+  max-width: 500px;
 }
 #portal {
   background-image: url('https://source.unsplash.com/random/play'); /* The image used */

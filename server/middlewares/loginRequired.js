@@ -24,7 +24,7 @@ export default (req, res, next) => {
     }
 
     const user = await Users.findOne({ _id: decoded._id });
-    if (!user) {
+    if (!user || !user.isLogin) {
       return response({ res, code: 403, errors: [authErrors.invalidAuth] });
     }
 
