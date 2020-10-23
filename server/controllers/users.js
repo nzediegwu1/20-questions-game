@@ -84,9 +84,9 @@ const UserController = {
     });
   },
   async onLoginSignup(user, socketId) {
-    Users.updateOne({ _id: user }, { isLogin: true }).exec(() =>
-      OnlineUsers.create({ user, socketId }).then(() => refreshOnlineUsers())
-    );
+    Users.updateOne({ _id: user }, { isLogin: true }).exec();
+    await OnlineUsers.create({ user, socketId });
+    refreshOnlineUsers();
   },
 };
 
