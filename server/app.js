@@ -136,15 +136,18 @@ io.on('connection', async (socket) => {
         socketId: socket.id,
       });
       if (current?.status === 'playing') {
-        OnlineUsers.updateMany(
-          { user: { $in: [current.playingWith, current.user] } },
-          { status: 'online' }
-        ).exec(() => refreshOnlineUsers());
-        const peer = await OnlineUsers.find({ user: current.playingWith });
+        const [peer] = await Promise.all([
+          OnlineUsers.find({ user: current.playingWith }).exec(),
+          OnlineUsers.updateMany(
+            { user: { $in: [current.playingWith, current.user] } },
+            { status: 'online' }
+          ).exec(),
+        ]);
         peer.forEach(({ socketId }) => {
           io.to(socketId).emit('receiverAccepted', false);
         });
       }
+      refreshOnlineUsers();
     }
   });
 });
