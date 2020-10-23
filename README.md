@@ -33,7 +33,14 @@ An open source web game where users play the 20 Questions game online.
 
 
 
-## Project setup for production
+## Project setup
+
+- Inside project root, create a `.env` file and copy variables from `.env.sample` file into it
+- Set actual environment variables in your `.env` file
+- Do same for .env.sample file inside `client` folder
+
+
+## For production
 ```
 yarn heroku-preinstall && yarn build
 ```
