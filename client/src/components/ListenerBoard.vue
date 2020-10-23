@@ -60,7 +60,7 @@ export default {
         questionerSocket: this.questionerSocket,
         guessAnswer: this.guessAnswer,
       };
-      this.$socket.emit("guessAnswer", payload);
+      this.$socket.client.emit("guessAnswer", payload);
       this.guessAnswer = "";
       this.wordDispatched = false;
       this.header = "Waiting for the Czar to Confirm Your Guess...";
@@ -75,7 +75,7 @@ export default {
     wrongGuess(message) {
       if (this.guessList.length > 19) {
         const payload = { to: this.questionerSocket, winner: "czar" };
-        this.$socket.emit("gameOver", payload);
+        this.$socket.client.emit("gameOver", payload);
         return notify("error", "Sorry, You Lost the Game.");
       }
       notify("warning", message);

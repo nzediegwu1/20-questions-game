@@ -88,17 +88,16 @@ io.on('connection', async (socket) => {
   socket.on('inviteUser', async (invitee) => {
     const inviteCookie = generateCookies(socket);
 
-    if (inviteCookie.token) {
-      const inviteeTabs = await OnlineUsers.find({ user: invitee });
-      const sender = jwt.decode(inviteCookie.token);
+    if (!inviteCookie.token) return;
+    const inviteeTabs = await OnlineUsers.find({ user: invitee });
+    const sender = jwt.decode(inviteCookie.token);
 
-      inviteeTabs.forEach(({ socketId }) => {
-        io.to(socketId).emit('inviteToPlay', {
-          ...sender,
-          socketId: socket.id,
-        });
+    inviteeTabs.forEach(({ socketId }) => {
+      io.to(socketId).emit('inviteToPlay', {
+        ...sender,
+        socketId: socket.id,
       });
-    }
+    });
   });
   socket.on('wordDispatched', ({ listenerSocket }) => {
     io.to(listenerSocket).emit('wordDispatched', {

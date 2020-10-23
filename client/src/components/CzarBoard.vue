@@ -98,11 +98,14 @@ export default {
       notify("error", "The Listner Won, You Lost!");
       this.$store.commit("setInviteAccepted", false);
       const { listenerSocket } = this.$store.state;
-      this.$socket.emit("gameOver", { to: listenerSocket, winner: "listner" });
+      this.$socket.client.emit("gameOver", {
+        to: listenerSocket,
+        winner: "listner",
+      });
     },
     wrongGuess() {
       const { listenerSocket } = this.$store.state;
-      this.$socket.emit("wrongGuess", { listenerSocket });
+      this.$socket.client.emit("wrongGuess", { listenerSocket });
       this.marked = true;
     },
     onSubmit(e) {
@@ -111,7 +114,7 @@ export default {
       this.answered = true;
       this.header = "You're the Czar";
       const { listenerSocket } = this.$store.state;
-      this.$socket.emit("wordDispatched", { listenerSocket });
+      this.$socket.client.emit("wordDispatched", { listenerSocket });
     },
     capitalize,
   },

@@ -51,7 +51,7 @@ export async function onboard(store, payload, type) {
     commit("setUser", response.user);
     notify("success", data.message);
 
-    payload.$socket.emit("userOnboard", response.user);
+    payload.$socket.client.emit("userOnboard", response.user);
     payload.$router.push("/playground");
   } catch (error) {
     handleErrors(error);
@@ -64,7 +64,7 @@ export const currentUser = (user, userList) => {
 };
 
 export function signOut(state) {
-  state.$socket.emit("userLeft", state.currentUser);
+  state.$socket.client.emit("userLeft", state.currentUser);
   state.$router.push("/");
   notify("success", "Logout successful");
   cookie.remove("token");

@@ -1,6 +1,7 @@
 import Vue from "vue";
 import BootstrapVue from "bootstrap-vue";
-import VueSocketIO from "vue-socket.io";
+import VueSocketIOExt from "vue-socket.io-extended";
+import io from "socket.io-client";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
@@ -13,17 +14,17 @@ import "./css/toastr.css";
 
 Vue.use(BootstrapVue);
 
-Vue.use(
-  new VueSocketIO({
-    debug: true,
-    connection: process.env.VUE_APP_BASE_URL,
-    vuex: {
-      store,
-      actionPrefix: "SOCKET_",
-      mutationPrefix: "SOCKET_",
-    },
-  })
-);
+const ioInstance = io(process.env.VUE_APP_BASE_URL, {
+  reconnection: true,
+  reconnectionDelay: 500,
+  maxReconnectionAttempts: Infinity,
+  autoConnect: false,
+});
+Vue.use(VueSocketIOExt, ioInstance, {
+  store,
+  actionPrefix: "SOCKET_",
+  eventToActionTransformer: (actionName) => actionName,
+});
 
 Vue.config.productionTip = false;
 
