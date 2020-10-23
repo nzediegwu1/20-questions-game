@@ -1,6 +1,9 @@
 import { io } from '../app';
 import { OnlineUsers } from '../models';
 
+/**
+ * @description Fetches a unique list of online users, with user details
+ */
 export const refreshOnlineUsers = async () => {
   const onlineUsers = await OnlineUsers.aggregate([
     {
@@ -29,6 +32,12 @@ export const refreshOnlineUsers = async () => {
   return io.emit('onlineUsers', onlineUsers);
 };
 
+/**
+ * @description Generates a cookie Object from cookie string retrieved from socket
+ *
+ * @param {Object} socket Socket instance
+ * @returns {Object} Key value pair of the items within cookie
+ */
 export const generateCookies = (socket) => {
   const { cookie } = socket.request.headers;
   const cookieArray = cookie?.split(/=|;\s+/g) || [];

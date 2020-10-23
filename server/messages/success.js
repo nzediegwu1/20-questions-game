@@ -8,8 +8,6 @@ export const userSuccess = {
 
 export const gameSuccess = {
   acceptInvite: 'Game Invite Accepted!',
-};
-
-export const gameFail = {
-  userLeft: 'Your challenger left. Game over!',
+  gameEnd: 'Listner Failed after 20 attempts. You Win!',
+  youWin: 'Your Guess was Right, You Win!',
 };

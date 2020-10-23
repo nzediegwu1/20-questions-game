@@ -7,6 +7,10 @@ import { refreshOnlineUsers } from '../helpers/utils';
 import { io } from '../app';
 
 const UserController = {
+  /**
+   * @description Handles user signup
+   *
+   */
   async signup(req, res) {
     const {
       body: { email: mail, password },
@@ -30,6 +34,9 @@ const UserController = {
     });
   },
 
+  /**
+   * @description Handles user login
+   */
   async login(req, res) {
     const {
       body: { email, password },
@@ -47,27 +54,34 @@ const UserController = {
       data: { token: generateToken(user._doc), user },
     });
   },
+  /**
+   * @description Fetches details of the current user
+   */
   async currentUser(req, res) {
     const { _id: userId } = req.user;
     const data = await Users.findById(userId).select('-password -__v');
     existsOr404(data, userErrors.notFound);
     return response({ res, message: userSuccess.retrieved, data });
   },
+
+  /**
+   * @description Handles edge cases upon user logout
+   *
+   */
   async onLogout(user) {
     Users.findOneAndUpdate({ _id: user._id }, { isLogin: false }).exec();
     await OnlineUsers.deleteMany({ user: user._id });
     io.emit('playerLeft', user);
-    if (user.status === 'playing') {
-      OnlineUsers.updateMany(
-        { user: user.playingWith },
-        { status: 'online' }
-      ).exec(() => refreshOnlineUsers());
-      const peer = await OnlineUsers.find({ user: user.playingWith });
-      return peer.forEach(({ socketId }) => {
-        io.to(socketId).emit('receiverAccepted', false);
-      });
-    }
-    return refreshOnlineUsers();
+    if (user.status !== 'playing') return refreshOnlineUsers();
+
+    OnlineUsers.updateMany(
+      { user: user.playingWith },
+      { status: 'online' }
+    ).exec(() => refreshOnlineUsers());
+    const peer = await OnlineUsers.find({ user: user.playingWith });
+    return peer.forEach(({ socketId }) => {
+      io.to(socketId).emit('receiverAccepted', false);
+    });
   },
   async onLoginSignup(user, socketId) {
     Users.updateOne({ _id: user }, { isLogin: true }).exec(() =>

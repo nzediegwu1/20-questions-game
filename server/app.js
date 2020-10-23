@@ -15,6 +15,7 @@ import config from './config';
 import { OnlineUsers } from './models';
 import UserController from './controllers/users';
 import { generateCookies, refreshOnlineUsers } from './helpers/utils';
+import { gameErrors, gameSuccess } from './messages';
 
 const { MONGODB_URL } = config;
 
@@ -108,10 +109,7 @@ io.on('connection', async (socket) => {
     io.to(questionerSocket).emit('guessAnswer', guessAnswer);
   });
   socket.on('wrongGuess', ({ listenerSocket }) => {
-    io.to(listenerSocket).emit(
-      'wrongGuess',
-      'Your Guess was Incorrect! Try again'
-    );
+    io.to(listenerSocket).emit('wrongGuess', gameErrors.wrongGuess);
   });
   socket.on('gameOver', async ({ to, winner }) => {
     const current = await OnlineUsers.findOne({ socketId: socket.id });
@@ -121,9 +119,7 @@ io.on('connection', async (socket) => {
     );
     refreshOnlineUsers();
     const message =
-      winner === 'czar'
-        ? 'Listner Failed after 20 attempts. You Win!'
-        : 'Your Guess was Right, You Win!';
+      winner === 'czar' ? gameSuccess.gameEnd : gameSuccess.youWin;
 
     io.to(to).emit('gameOver', message);
   });
@@ -131,23 +127,22 @@ io.on('connection', async (socket) => {
     console.log('Client disconnected');
     const xCookies = generateCookies(socket);
 
-    if (xCookies.token) {
-      const current = await OnlineUsers.findOneAndDelete({
-        socketId: socket.id,
+    if (!xCookies.token) return;
+    const current = await OnlineUsers.findOneAndDelete({
+      socketId: socket.id,
+    });
+    if (current?.status === 'playing') {
+      const [peer] = await Promise.all([
+        OnlineUsers.find({ user: current.playingWith }).exec(),
+        OnlineUsers.updateMany(
+          { user: { $in: [current.playingWith, current.user] } },
+          { status: 'online' }
+        ).exec(),
+      ]);
+      peer.forEach(({ socketId }) => {
+        io.to(socketId).emit('receiverAccepted', false);
       });
-      if (current?.status === 'playing') {
-        const [peer] = await Promise.all([
-          OnlineUsers.find({ user: current.playingWith }).exec(),
-          OnlineUsers.updateMany(
-            { user: { $in: [current.playingWith, current.user] } },
-            { status: 'online' }
-          ).exec(),
-        ]);
-        peer.forEach(({ socketId }) => {
-          io.to(socketId).emit('receiverAccepted', false);
-        });
-      }
-      refreshOnlineUsers();
     }
+    refreshOnlineUsers();
   });
 });

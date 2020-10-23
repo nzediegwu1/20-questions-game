@@ -1,2 +1,2 @@
-export { userSuccess } from './success';
-export { userErrors, authErrors } from './error';
+export { userSuccess, gameSuccess } from './success';
+export { userErrors, authErrors, gameErrors } from './error';

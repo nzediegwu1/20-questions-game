@@ -5,6 +5,10 @@ import { gameSuccess } from '../messages/success';
 import { OnlineUsers } from '../models';
 
 const GameController = {
+
+  /**
+   * @description Enables a user to accept game invite and handles edge cases associated
+   */
   async acceptInvite(req, res) {
     const {
       user: { _id: invitee },
