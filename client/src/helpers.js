@@ -54,6 +54,11 @@ export async function onboard(store, payload, type) {
     payload.$socket.client.emit("userOnboard", response.user);
     payload.$router.push("/playground");
   } catch (error) {
+    if (error.response?.status === 401) {
+      payload.shouldLogout = true;
+      state.loading = false;
+      return (payload.message = error.response.data.errors[0]);
+    }
     handleErrors(error);
   }
   state.loading = false;
@@ -72,3 +77,12 @@ export function signOut(state) {
 
 export const capitalize = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
+
+export const makeRequest = async (kwargs) => {
+  const { method, path, reqBody, onSuccess } = kwargs;
+  return client[method](`/${path}`, reqBody)
+    .then(({ data }) => {
+      onSuccess(data);
+    })
+    .catch((error) => handleErrors(error));
+};

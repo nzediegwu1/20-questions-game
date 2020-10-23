@@ -1,8 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { client } from "./helpers";
+import { makeRequest } from "./helpers";
 
-import { handleErrors, notify, onboard } from "./helpers";
+import { notify, onboard } from "./helpers";
 
 Vue.use(Vuex);
 
@@ -40,20 +40,31 @@ export default new Vuex.Store({
       onboard(store, payload, "login");
     },
     async getCurrentUser({ state }) {
-      return client
-        .get(`/currentUser`)
-        .then(({ data }) => {
-          state.user = data.data;
-        })
-        .catch((error) => handleErrors(error));
+      const kwargs = {
+        method: "get",
+        path: "current-user",
+        onSuccess: (data) => (state.user = data.data),
+      };
+      return makeRequest(kwargs);
     },
     async acceptInvite(_, payload) {
-      return client
-        .post("/acceptInvite", payload)
-        .then(({ data }) => {
-          notify("success", data.message);
-        })
-        .catch((error) => handleErrors(error));
+      const kwargs = {
+        method: "post",
+        path: "accept-invite",
+        reqBody: payload,
+        onSuccess: (data) => notify("success", data.message),
+      };
+      return makeRequest(kwargs);
+    },
+    async logoutBrowsers(_, payload) {
+      const kwargs = {
+        method: "post",
+        path: "logout-browsers",
+        reqBody: payload.form,
+        onSuccess: (data) => notify("success", data.message),
+      };
+      makeRequest(kwargs);
+      payload.shouldLogout = false;
     },
   },
 });

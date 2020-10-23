@@ -44,19 +44,28 @@
     <div v-else class="text-center">
       <i class="fa fa-spinner fa-spin"></i>
     </div>
+    <LogoutBrowsers
+      :modalShow="shouldLogout"
+      :actions="{ logoutBrowser, toggleModal }"
+      :message="message"
+    />
   </b-form>
 </template>
 
 <script>
 import { validatePassword } from "../helpers";
+import LogoutBrowsers from "./LogoutBrowsers";
 
 export default {
+  components: { LogoutBrowsers },
   data() {
     return {
       form: {
         email: "",
         password: "",
       },
+      shouldLogout: false,
+      message: "",
     };
   },
   computed: {
@@ -68,6 +77,12 @@ export default {
     },
   },
   methods: {
+    toggleModal() {
+      this.shouldLogout = !this.shouldLogout;
+    },
+    logoutBrowser() {
+      this.$store.dispatch("logoutBrowsers", this);
+    },
     onSubmit(event) {
       event.preventDefault();
       this.$store.dispatch("login", this);

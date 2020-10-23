@@ -3,7 +3,7 @@ import { OnlineUsers, Users } from '../models';
 import { response, resolver, CustomError, existsOr404 } from '../helpers/http';
 import { authErrors, userErrors, userSuccess } from '../messages';
 import { generateToken } from '../helpers/auth';
-import { refreshOnlineUsers } from '../helpers/utils';
+import { refreshOnlineUsers, validateUser } from '../helpers/utils';
 import { io } from '../app';
 
 const UserController = {
@@ -38,13 +38,8 @@ const UserController = {
    * @description Handles user login
    */
   async login(req, res) {
-    const {
-      body: { email, password },
-    } = req;
-    const user = await Users.findOne({ email: email.toLowerCase() });
-    if (!user || !bcrypt.compareSync(password, user.password)) {
-      throw new CustomError(userErrors.invalidUser, 400);
-    }
+    const { body } = req;
+    const user = await validateUser(body);
     if (user.isLogin) throw new CustomError(authErrors.alreadyLoggedIn, 401);
 
     delete user._doc.password;
@@ -87,6 +82,14 @@ const UserController = {
     Users.updateOne({ _id: user }, { isLogin: true }).exec();
     await OnlineUsers.create({ user, socketId });
     refreshOnlineUsers();
+  },
+
+  async logoutBrowsers(req, res) {
+    const { _id: userId } = await validateUser(req.body);
+    Users.updateOne({ _id: userId }, { isLogin: false }).exec();
+
+    OnlineUsers.deleteMany({ user: userId }).then(() => refreshOnlineUsers());
+    return response({ res, message: userSuccess.logoutBrowsers });
   },
 };
 

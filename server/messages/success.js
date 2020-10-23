@@ -4,6 +4,7 @@ export const userSuccess = {
   login: 'Login successful',
   retrieved: 'Successfully retrieved user details',
   inviteSent: 'Successfully sent invites',
+  logoutBrowsers: 'Successfully logged out of browsers',
 };
 
 export const gameSuccess = {

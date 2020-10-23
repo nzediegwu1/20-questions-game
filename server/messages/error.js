@@ -8,7 +8,7 @@ export const authErrors = {
   unauthorized: 'Unauthorized! Please login to perform this operation',
   sessionExpired: 'Your session has expired, please login again to continue',
   invalidAuth: 'Invalid auth, please login again to continue',
-  alreadyLoggedIn: 'Already logged in on a different browser',
+  alreadyLoggedIn: "You're logged in on a different browser",
 };
 
 export const gameErrors = {

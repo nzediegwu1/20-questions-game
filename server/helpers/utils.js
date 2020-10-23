@@ -1,5 +1,9 @@
+import bcrypt from 'bcrypt';
+
 import { io } from '../app';
-import { OnlineUsers } from '../models';
+import { userErrors } from '../messages';
+import { OnlineUsers, Users } from '../models';
+import { CustomError } from './http';
 
 /**
  * @description Fetches a unique list of online users, with user details
@@ -48,3 +52,13 @@ export const generateCookies = (socket) => {
 };
 
 export const requiredString = { type: String, required: true };
+
+export const validateUser = async (reqBody) => {
+  const { email, password } = reqBody;
+
+  const user = await Users.findOne({ email: email.toLowerCase() });
+  if (!user || !bcrypt.compareSync(password, user.password)) {
+    throw new CustomError(userErrors.invalidUser, 400);
+  }
+  return user;
+};
