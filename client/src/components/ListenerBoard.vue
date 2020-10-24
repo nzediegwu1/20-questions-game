@@ -29,7 +29,7 @@
         <h6 v-show="wordDispatched" class="text-center attempts">
           {{ 20 - guessList.length }} Attempts Left
         </h6>
-        <b-list-group v-if="wordDispatched">
+        <b-list-group class="attempt-list" v-if="wordDispatched">
           <b-list-group-item
             :key="guess + Math.random()"
             v-for="guess of guessList"
