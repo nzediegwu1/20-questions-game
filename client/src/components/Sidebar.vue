@@ -70,7 +70,6 @@ export default {
   mounted() {
     if (!cookie.get("token")) return this.$router.push("/");
     client.defaults.headers = { token: cookie.get("token") };
-    // connect socket here
     this.$socket.client.open();
     this.$store.dispatch("getCurrentUser");
   },

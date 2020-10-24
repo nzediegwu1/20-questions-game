@@ -30,7 +30,10 @@
           {{ 20 - guessList.length }} Attempts Left
         </h6>
         <b-list-group v-if="wordDispatched">
-          <b-list-group-item :key="guess" v-for="guess of guessList">
+          <b-list-group-item
+            :key="guess + new Date()"
+            v-for="guess of guessList"
+          >
             {{ capitalize(guess) }}
           </b-list-group-item>
         </b-list-group>
@@ -41,6 +44,7 @@
 
 <script>
 import { capitalize, notify } from "../helpers";
+
 export default {
   data() {
     return {
@@ -72,20 +76,28 @@ export default {
       this.wordDispatched = true;
       this.questionerSocket = questionerSocket;
     },
-    wrongGuess(message) {
+    async wrongGuess(message) {
       if (this.guessList.length > 19) {
         const payload = { to: this.questionerSocket, winner: "czar" };
         this.$socket.client.emit("gameOver", payload);
-        return notify("error", "Sorry, You Lost the Game.");
+
+        const message = "Sorry, You Lost the Game.";
+        const msgPayload = { message, style: "text-danger" };
+
+        await this.$store.commit("setEndMessage", msgPayload);
+        this.$store.commit("setIsOver", true);
       }
-      notify("warning", message);
+      notify("error", message);
       this.wordDispatched = true;
       this.header = "Try Another Word";
     },
-    gameOver(message) {
+    async gameOver(message) {
       const { receiverAccepted } = !this.$store.state;
       this.$store.commit("setReceiverAccepted", !receiverAccepted);
-      notify("success", message);
+
+      const payload = { message, style: "text-success" };
+      await this.$store.commit("setEndMessage", payload);
+      this.$store.commit("setIsOver", true);
     },
   },
 };

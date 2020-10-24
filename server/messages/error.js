@@ -12,6 +12,6 @@ export const authErrors = {
 };
 
 export const gameErrors = {
-  wrongGuess: 'Your Guess was Incorrect! Try again',
-  userLeft: 'Your challenger left. Game over!',
+  wrongGuess: 'Your Guess Was Incorrect! Try Again',
+  userLeft: 'Your Challenger Left. Game Over!',
 };

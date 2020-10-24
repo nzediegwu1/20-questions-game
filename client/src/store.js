@@ -14,6 +14,8 @@ export default new Vuex.Store({
     listenerSocket: "",
     inviteAccepted: false,
     receiverAccepted: false,
+    isOver: false,
+    endMessage: {},
   },
   mutations: {
     setUser(state, payload) {
@@ -30,6 +32,12 @@ export default new Vuex.Store({
     },
     setReceiverAccepted(state, payload) {
       state.receiverAccepted = payload;
+    },
+    setEndMessage(state, payload) {
+      state.endMessage = payload;
+    },
+    setIsOver(state, payload) {
+      state.isOver = payload;
     },
   },
   actions: {

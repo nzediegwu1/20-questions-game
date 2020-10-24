@@ -2,7 +2,7 @@
   <div class="text-center" id="portal">
     <b-container>
       <b-row>
-        <b-col class="col-md-4"
+        <b-col md="4" class="czar-board"
           ><b-card :header="header" header-tag="header">
             <b-form v-if="!answered" @submit="onSubmit" class="login-form">
               <b-form-group description="Your Listener Will Guess Your Word">
@@ -28,12 +28,12 @@
                 >Save</b-button
               >
             </b-form>
-            <b-jumbotron v-else class lead="For Records, Your Word is:">
+            <b-jumbotron v-else class lead="Your Word is">
               <h4 class="answer-text">{{ capitalize(answer) }}</h4>
             </b-jumbotron>
           </b-card>
         </b-col>
-        <b-col class="col-md-8 text-center">
+        <b-col md="8" class="text-center czar-board">
           <b-card :header="guessListHeader" header-tag="header">
             <b-list-group class="guess-list" v-if="guesses.length">
               <b-list-group-item
@@ -67,6 +67,10 @@
                 >
               </b-list-group-item>
             </b-list-group>
+            <h5 class="text-center no-questions" v-else>
+              <i class="fa fa-folder-open-o"></i>
+              No Questions
+            </h5>
           </b-card>
         </b-col>
       </b-row>
@@ -75,7 +79,8 @@
 </template>
 
 <script>
-import { capitalize, notify } from "../helpers";
+import { capitalize } from "../helpers";
+
 export default {
   data() {
     return {
@@ -90,14 +95,18 @@ export default {
     guessListHeader() {
       return this.marked
         ? "Waiting for Your Listener to Try Again..."
-        : "Your Listener's Guesses Go Here";
+        : `${20 - this.guesses.length} Questions left`;
     },
   },
   methods: {
-    youWin() {
-      notify("error", "The Listner Won, You Lost!");
+    async youWin() {
       this.$store.commit("setInviteAccepted", false);
       const { listenerSocket } = this.$store.state;
+      const message = "The Listner Won, You Lost!";
+      const payload = { message, style: "text-danger" };
+
+      await this.$store.commit("setEndMessage", payload);
+      this.$store.commit("setIsOver", true);
       this.$socket.client.emit("gameOver", {
         to: listenerSocket,
         winner: "listner",
@@ -123,9 +132,11 @@ export default {
       this.guesses.unshift(guess);
       this.marked = false;
     },
-    gameOver(message) {
+    async gameOver(message) {
       this.$store.commit("setInviteAccepted", false);
-      notify("success", message);
+      const payload = { message, style: "text-success" };
+      await this.$store.commit("setEndMessage", payload);
+      this.$store.commit("setIsOver", true);
     },
   },
 };

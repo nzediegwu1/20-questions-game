@@ -6,11 +6,22 @@
     />
     <CzarBoard v-else-if="inviteAccepted && currentUser.status === 'playing'" />
     <Instructions v-else />
+    <GameOver
+      :css="endMessage.style"
+      :message="endMessage.message"
+      :modalShow="isOver"
+    />
   </div>
 </template>
 
 <script>
-import { Instructions, CzarBoard, ListenerBoard, NavBar } from "../components";
+import {
+  Instructions,
+  CzarBoard,
+  ListenerBoard,
+  NavBar,
+  GameOver,
+} from "../components";
 import { currentUser } from "../helpers";
 
 export default {
@@ -19,6 +30,7 @@ export default {
     CzarBoard,
     ListenerBoard,
     NavBar,
+    GameOver,
   },
   data() {
     return {
@@ -35,6 +47,12 @@ export default {
     },
     receiverAccepted() {
       return this.$store.state.receiverAccepted;
+    },
+    isOver() {
+      return this.$store.state.isOver;
+    },
+    endMessage() {
+      return this.$store.state.endMessage;
     },
   },
   sockets: {

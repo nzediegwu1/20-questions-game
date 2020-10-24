@@ -101,7 +101,7 @@
   color: red;
 }
 .answer-text {
-  color: green;
+  color: lightgreen;
 }
 
 .list-group {
@@ -122,4 +122,29 @@
 
 .menu-button {
   background-color: black;
+}
+
+.col-md-8 .card {
+  min-height: 14em;
+}
+
+.no-questions {
+  margin-top: 1.5em;
+}
+
+.czar-board {
+  margin-bottom: 1em;
+}
+
+.jumbotron {
+  background-color: #343a40;
+  color: white;
+}
+.gameover-button {
+  line-height: 0.8;
+  padding-bottom: 0.5em;
+}
+.gameover-header {
+  max-height: 3em;
+  line-height: 1em;
 }
