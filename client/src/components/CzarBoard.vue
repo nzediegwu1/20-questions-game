@@ -37,7 +37,7 @@
           <b-card :header="guessListHeader" header-tag="header">
             <b-list-group class="guess-list" v-if="guesses.length">
               <b-list-group-item
-                :key="guess + new Date()"
+                :key="guess + Math.random()"
                 v-for="(guess, index) in guesses"
               >
                 <p style="float: left">

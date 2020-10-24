@@ -31,7 +31,7 @@
         </h6>
         <b-list-group v-if="wordDispatched">
           <b-list-group-item
-            :key="guess + new Date()"
+            :key="guess + Math.random()"
             v-for="guess of guessList"
           >
             {{ capitalize(guess) }}
