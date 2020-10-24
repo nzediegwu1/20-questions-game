@@ -104,7 +104,7 @@
   color: lightgreen;
 }
 
-.list-group {
+.list-group:not(".online-users") {
   max-height: 13em;
   overflow-y: auto;
 }
