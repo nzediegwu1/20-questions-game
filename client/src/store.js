@@ -16,6 +16,7 @@ export default new Vuex.Store({
     receiverAccepted: false,
     isOver: false,
     endMessage: {},
+    sidebarVisible: false,
   },
   mutations: {
     setUser(state, payload) {
@@ -38,6 +39,9 @@ export default new Vuex.Store({
     },
     setIsOver(state, payload) {
       state.isOver = payload;
+    },
+    toggleSidebar(state, payload) {
+      state.sidebarVisible = payload;
     },
   },
   actions: {

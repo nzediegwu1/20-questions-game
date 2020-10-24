@@ -102,7 +102,7 @@ export default {
     async youWin() {
       this.$store.commit("setInviteAccepted", false);
       const { listenerSocket } = this.$store.state;
-      const message = "The Listner Won, You Lost!";
+      const message = "The Listner Guessed Right, You Lost!";
       const payload = { message, style: "text-danger" };
 
       await this.$store.commit("setEndMessage", payload);

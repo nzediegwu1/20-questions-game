@@ -1,8 +1,7 @@
 <template>
   <b-modal hide-footer v-model="modalShow">
     <template class="gameover-header" #modal-header>
-      <!-- Emulate built in modal header close button action -->
-      <b>Game Over</b>
+      <b>Game Over!</b>
       <b-button
         class="gameover-button"
         size="sm"

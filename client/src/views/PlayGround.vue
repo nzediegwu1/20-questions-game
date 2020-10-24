@@ -58,6 +58,7 @@ export default {
   sockets: {
     receiverAccepted(status) {
       this.$store.commit("setReceiverAccepted", status);
+      this.$store.commit("toggleSidebar", false);
     },
     playerLeft(leftPlayer) {
       const { user } = this.$store.state;

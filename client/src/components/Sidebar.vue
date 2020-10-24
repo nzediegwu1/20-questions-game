@@ -1,15 +1,40 @@
 <template>
   <div>
-    <b-button class="menu-button" squared v-b-toggle.sidebar-variant>
+    <b-button @click="toggleSidebar" class="menu-button" squared>
       <i class="fa fa-bars"></i>
     </b-button>
     <b-sidebar
-      id="sidebar-variant"
-      title="Online Players"
       bg-variant="dark"
       text-variant="light"
       shadow
+      :visible="sidebarVisible"
+      no-header
     >
+      <template #default>
+        <div>
+          <div class="d-flex bg-dark text-light align-items-center px-3 py-2">
+            <strong class="mr-auto">Online Players</strong>
+            <b-button size="sm" @click="toggleSidebar">x</b-button>
+          </div>
+          <b-list-group class="online-users">
+            <b-list-group-item :key="item._id" v-for="item of onlineUserList"
+              ><img
+                src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairNotTooLong&accessoriesType=Prescription01&hairColor=BrownDark&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light"
+              />{{ item.user.nickname }}
+              <b-button
+                class="invite-button"
+                size="sm"
+                :disabled="
+                  item.status === 'playing' || currentUser.status === 'playing'
+                "
+                @click="() => inviteUser(item._id)"
+                >Invite</b-button
+              >
+            </b-list-group-item>
+          </b-list-group>
+        </div>
+      </template>
+
       <template slot="footer">
         <div class="d-flex bg-dark text-light align-items-center px-3 py-2">
           <strong class="mr-auto"></strong>
@@ -18,22 +43,6 @@
           </b-button>
         </div>
       </template>
-      <b-list-group class="online-users">
-        <b-list-group-item :key="item._id" v-for="item of onlineUserList"
-          ><img
-            src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairNotTooLong&accessoriesType=Prescription01&hairColor=BrownDark&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light"
-          />{{ item.user.nickname }}
-          <b-button
-            class="invite-button"
-            size="sm"
-            :disabled="
-              item.status === 'playing' || currentUser.status === 'playing'
-            "
-            @click="() => inviteUser(item._id)"
-            >Invite</b-button
-          >
-        </b-list-group-item>
-      </b-list-group>
     </b-sidebar>
   </div>
 </template>
@@ -51,6 +60,10 @@ export default {
       this.$socket.client.emit("inviteUser", invitee);
       notify("info", "Game invite sent");
     },
+    toggleSidebar() {
+      const { sidebarVisible } = this.$store.state;
+      this.$store.commit("toggleSidebar", !sidebarVisible);
+    },
   },
   computed: {
     onlineUserList() {
@@ -60,6 +73,9 @@ export default {
     currentUser() {
       const { user: me, onlineUsers } = this.$store.state;
       return currentUser(me, onlineUsers) || {};
+    },
+    sidebarVisible() {
+      return this.$store.state.sidebarVisible;
     },
   },
   sockets: {

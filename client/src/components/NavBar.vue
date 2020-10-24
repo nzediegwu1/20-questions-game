@@ -63,6 +63,8 @@ export default {
       await this.$store.dispatch("acceptInvite", { sender: sender._id });
       this.modalShow = !this.modalShow;
       this.$store.commit("setInviteAccepted", true);
+
+      this.$store.commit("toggleSidebar", false);
       this.$store.commit("setReceiverAccepted", false);
       this.$store.commit("setListnerSocket", this.sender.socketId);
     },
