@@ -10,6 +10,7 @@
       :css="endMessage.style"
       :message="endMessage.message"
       :modalShow="isOver"
+      :answer="endMessage.answer"
     />
   </div>
 </template>

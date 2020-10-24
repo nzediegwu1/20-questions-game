@@ -110,7 +110,7 @@ io.on('connection', async (socket) => {
   socket.on('wrongGuess', ({ listenerSocket }) => {
     io.to(listenerSocket).emit('wrongGuess', gameErrors.wrongGuess);
   });
-  socket.on('gameOver', async ({ to, winner }) => {
+  socket.on('gameOver', async ({ to, winner, answer }) => {
     const current = await OnlineUsers.findOne({ socketId: socket.id });
     await OnlineUsers.updateMany(
       { user: { $in: [current.playingWith, current.user] } },
@@ -118,9 +118,9 @@ io.on('connection', async (socket) => {
     );
     refreshOnlineUsers();
     const message =
-      winner === 'czar' ? gameSuccess.gameEnd : gameSuccess.youWin;
+      winner === 'czar' ? gameSuccess.youLost : gameSuccess.youWin;
 
-    io.to(to).emit('gameOver', message);
+    io.to(to).emit('gameOver', { message, answer });
   });
   socket.on('disconnect', async () => {
     console.log('Client disconnected');

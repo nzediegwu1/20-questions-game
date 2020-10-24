@@ -9,6 +9,6 @@ export const userSuccess = {
 
 export const gameSuccess = {
   acceptInvite: 'Game Invite Accepted!',
-  gameEnd: 'Listner Failed after 20 attempts. You Win!',
+  youLost: 'You Failed after 20 attempts!',
   youWin: 'Your Guess was Right, You Win!',
 };

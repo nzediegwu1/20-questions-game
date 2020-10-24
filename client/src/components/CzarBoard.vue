@@ -54,7 +54,7 @@
                     >NO</b-button
                   >
                   <b-button
-                    @click="youWin"
+                    @click="listenerWin"
                     :disabled="
                       guesses[0].toLowerCase() !== answer.toLowerCase()
                     "
@@ -99,20 +99,40 @@ export default {
     },
   },
   methods: {
-    async youWin() {
+    async listenerWin() {
       this.$store.commit("setInviteAccepted", false);
+
       const { listenerSocket } = this.$store.state;
       const message = "The Listner Guessed Right, You Lost!";
       const payload = { message, style: "text-danger" };
 
       await this.$store.commit("setEndMessage", payload);
       this.$store.commit("setIsOver", true);
-      this.$socket.client.emit("gameOver", {
+
+      const reqBody = {
         to: listenerSocket,
         winner: "listner",
-      });
+      };
+      this.$socket.client.emit("gameOver", reqBody);
     },
-    wrongGuess() {
+    async wrongGuess() {
+      if (this.guesses.length > 19) {
+        this.$store.commit("setInviteAccepted", false);
+        const { listenerSocket } = this.$store.state;
+
+        const payload = {
+          to: listenerSocket,
+          winner: "czar",
+          answer: this.answer,
+        };
+        this.$socket.client.emit("gameOver", payload);
+
+        const message = "Listner Failed after 20 attempts. You Win!";
+        const endMessage = { message, style: "text-success" };
+
+        await this.$store.commit("setEndMessage", endMessage);
+        return this.$store.commit("setIsOver", true);
+      }
       const { listenerSocket } = this.$store.state;
       this.$socket.client.emit("wrongGuess", { listenerSocket });
       this.marked = true;
@@ -131,12 +151,6 @@ export default {
     guessAnswer(guess) {
       this.guesses.unshift(guess);
       this.marked = false;
-    },
-    async gameOver(message) {
-      this.$store.commit("setInviteAccepted", false);
-      const payload = { message, style: "text-success" };
-      await this.$store.commit("setEndMessage", payload);
-      this.$store.commit("setIsOver", true);
     },
   },
 };

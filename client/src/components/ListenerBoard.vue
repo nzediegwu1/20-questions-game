@@ -77,26 +77,16 @@ export default {
       this.questionerSocket = questionerSocket;
     },
     async wrongGuess(message) {
-      if (this.guessList.length > 19) {
-        const payload = { to: this.questionerSocket, winner: "czar" };
-        this.$socket.client.emit("gameOver", payload);
-
-        const message = "Sorry, You Lost the Game.";
-        const msgPayload = { message, style: "text-danger" };
-
-        await this.$store.commit("setEndMessage", msgPayload);
-        this.$store.commit("setIsOver", true);
-      }
+      if (this.guessList.length > 19) return;
       notify("error", message);
       this.wordDispatched = true;
       this.header = "Try Another Word";
     },
-    async gameOver(message) {
-      const { receiverAccepted } = !this.$store.state;
-      this.$store.commit("setReceiverAccepted", !receiverAccepted);
+    async gameOver(payload) {
+      this.$store.commit("setReceiverAccepted", false);
+      const style = payload.answer ? "text-danger" : "text-success";
 
-      const payload = { message, style: "text-success" };
-      await this.$store.commit("setEndMessage", payload);
+      await this.$store.commit("setEndMessage", { ...payload, style });
       this.$store.commit("setIsOver", true);
     },
   },
