@@ -41,6 +41,7 @@ const resolve  = (action) => async (req, res) => {
  * Whose methods use our custom error Handler
  *
  * @param {Object} controller
+ * @returns {Object} Clone of the controller object with exception handling
  */
 export const resolver = (controller) =>
   Object.entries(controller).reduce((result, [key, value]) => {

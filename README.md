@@ -41,6 +41,7 @@ An open source web game where users play the 20 Questions game online.
 
 ## Using Docker
 - Run command: `docker-compose up`
+- Shut down: `docker-compose down`
 
 ## For production
 1. Build project: `yarn heroku-preinstall && yarn build`

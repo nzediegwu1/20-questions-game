@@ -9,7 +9,9 @@ import { io } from '../app';
 const UserController = {
   /**
    * @description Handles user signup
-   *
+   * @param {Object} req HTTP request object
+   * @param {Object} res HTTP response object
+   * @returns {Object} JSON response
    */
   async signup(req, res) {
     const {
@@ -36,6 +38,9 @@ const UserController = {
 
   /**
    * @description Handles user login
+   * @param {Object} req HTTP request object
+   * @param {Object} res HTTP response object
+   * @returns {Object} JSON response
    */
   async login(req, res) {
     const { body } = req;
@@ -51,6 +56,9 @@ const UserController = {
   },
   /**
    * @description Fetches details of the current user
+   * @param {Object} req HTTP request object
+   * @param {Object} res HTTP response object
+   * @returns {Object} JSON response
    */
   async currentUser(req, res) {
     const { _id: userId } = req.user;
@@ -61,7 +69,7 @@ const UserController = {
 
   /**
    * @description Handles edge cases upon user logout
-   *
+   * @param {Object} user Details of the user
    */
   async onLogout(user) {
     Users.findOneAndUpdate({ _id: user._id }, { isLogin: false }).exec();
@@ -71,19 +79,30 @@ const UserController = {
 
     OnlineUsers.updateMany(
       { user: user.playingWith },
-      { status: 'online' }
+      { status: 'online' },
     ).exec(() => refreshOnlineUsers());
     const peer = await OnlineUsers.find({ user: user.playingWith });
     return peer.forEach(({ socketId }) => {
       io.to(socketId).emit('receiverAccepted', false);
     });
   },
+  /**
+   * @description Handles user login or signup event
+   * @param {Object} user Details of the user
+   * @param {String} socketId Socket ID of the user
+   */
   async onLoginSignup(user, socketId) {
     Users.updateOne({ _id: user }, { isLogin: true }).exec();
     await OnlineUsers.create({ user, socketId });
     refreshOnlineUsers();
   },
 
+  /**
+   * @description Enables a user to logout from other browsers
+   * @param {Object} req HTTP request object
+   * @param {Object} res HTTP response object
+   * @returns {Object} JSON response
+   */
   async logoutBrowsers(req, res) {
     const { _id: userId } = await validateUser(req.body);
     Users.updateOne({ _id: userId }, { isLogin: false }).exec();

@@ -8,6 +8,9 @@ const GameController = {
 
   /**
    * @description Enables a user to accept game invite and handles edge cases associated
+   * @param {Object} req HTTP request object
+   * @param {Object} res HTTP response object
+   * @returns {Object} JSON response
    */
   async acceptInvite(req, res) {
     const {
