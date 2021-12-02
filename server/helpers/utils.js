@@ -6,6 +6,30 @@ import { OnlineUsers, Users } from '../models';
 import { CustomError } from './http';
 
 /**
+  SELECT DISTINCT ON ('user')
+        user status, playingWith, socketId, updatedAt
+  FROM onlineusers as onlineUsers
+  INNER JOIN
+  (
+    SELECT nickname, email FROM users
+  ) as user
+  ON onlineUsers.user = user._id
+  ORDERBY updatedAt DESC
+*/
+
+/**
+ * SELECT MAX(user), MAX(status), MAX(playingWith), MAX(socketId), MAX(updatedAt) FROM onlineusers
+ * GROUP BY user
+ * AS onlineUsers
+ * INNER JOIN
+ * (
+ *  SELECT nickname,email FROM users
+ * ) as user
+ * ON onlineUsers.user = user._id
+ * ORDERBY updatedAt DESC
+ */
+
+/**
  * @description Fetches a unique list of online users, with user details
  */
 export const refreshOnlineUsers = async () => {

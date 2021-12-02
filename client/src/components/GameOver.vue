@@ -1,5 +1,5 @@
 <template>
-  <b-modal hide-footer v-model="modalShow">
+  <b-modal centered hide-footer v-model="modalShow">
     <template class="gameover-header" #modal-header>
       <b>Game Over!</b>
       <b-button

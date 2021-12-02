@@ -16,7 +16,7 @@
                     type="text"
                     required
                     placeholder="Enter your word"
-                    v-model="answer"
+                    v-model.trim="answer"
                   ></b-form-input>
                 </b-input-group>
               </b-form-group>
@@ -116,9 +116,9 @@ export default {
       this.$socket.client.emit("gameOver", reqBody);
     },
     async wrongGuess() {
+      const { listenerSocket } = this.$store.state;
       if (this.guesses.length > 19) {
         this.$store.commit("setInviteAccepted", false);
-        const { listenerSocket } = this.$store.state;
 
         const payload = {
           to: listenerSocket,
@@ -133,13 +133,11 @@ export default {
         await this.$store.commit("setEndMessage", endMessage);
         return this.$store.commit("setIsOver", true);
       }
-      const { listenerSocket } = this.$store.state;
       this.$socket.client.emit("wrongGuess", { listenerSocket });
       this.marked = true;
     },
     onSubmit(e) {
       e.preventDefault();
-      this.header = "Waiting for the Listner to Guess Your Word...";
       this.answered = true;
       this.header = "You're the Czar";
       const { listenerSocket } = this.$store.state;

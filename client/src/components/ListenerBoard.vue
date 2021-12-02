@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="login-panel" id="portal">
-      <b-card :header="header" class="mt-3 login-card">
+    <div id="portal">
+      <b-card :header="header" class="mt-3 my-card">
         <b-form @submit="onSubmit" class="login-form">
           <b-form-group label="Your Guess">
             <b-input-group class="mb-2">
@@ -13,7 +13,7 @@
               <b-form-input
                 type="text"
                 required
-                v-model="guessAnswer"
+                v-model.trim="guessAnswer"
                 placeholder="Guess the Czars word"
               ></b-form-input>
             </b-input-group>
