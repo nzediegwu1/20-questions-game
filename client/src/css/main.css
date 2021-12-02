@@ -2,13 +2,17 @@
   width: -webkit-fill-available;
 }
 
-.login-panel {
-  padding-top: 10%;
+.my-card {
+  margin: auto;
+  max-width: 500px;
 }
 
 .login-card {
   margin: auto;
   max-width: 500px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 #portal {
   background-image: url('https://source.unsplash.com/random/play'); /* The image used */
@@ -19,7 +23,7 @@
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover; /* Resize the background image to cover the entire container */
-  padding-top: 2em;
+  padding-top: 1em;
 }
 
 .form-title {
@@ -117,7 +121,7 @@
   }
 }
 .guess-list {
-  max-height: 25em;
+  max-height: 35em;
   overflow-y: auto;
 }
 

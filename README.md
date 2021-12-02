@@ -54,23 +54,22 @@ yarn dev
 ```
 #### Client
 ```
-cd client && yarn run serve
+cd client && yarn serve
 ```
 
 
 
 ## Lints and fixes files in client
 ```
-cd client && yarn run lint
+cd client && yarn lint
 ```
 
 
 ## Limitations
 1. Relies heavily on cookies, hence app might misbehave when running in incognito mode. This is because it tracks the users' online status. However incognito mode tries to shield you from being tracked online by other users. Best to play without incognito mode on your browser. (Sign out and Login again to fix)
-2. UI design was done in a rush due to limited time. Could be improved to be better
+2. UI design was done in a rush due to limited time. Could be improved
 3. Does not persist anything about the game played. In future, game wins will be persisted for ranking users.
 4. Once a user reloads their browser while playing the game, the game terminates.
-5. Game inputs are not validated due to time constraints
 
 ## Edge Cases Handled
 1. I ensured that the online user list is real time and changes accordingly when a user logs out, login or closes their browser.

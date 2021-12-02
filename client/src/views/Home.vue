@@ -1,5 +1,5 @@
 <template>
-  <div class="login-panel" id="portal">
+  <div id="portal">
     <b-card class="mt-3 login-card">
       <h2 class="form-title text-center">20 Questions Game</h2>
       <b-tabs content-class="mt-3">

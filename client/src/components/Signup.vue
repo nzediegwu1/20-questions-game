@@ -6,7 +6,7 @@
           <div class="form-icon"><i class="fa fa-user-circle"></i></div>
         </b-input-group-prepend>
         <b-form-input
-          v-model="form.nickname"
+          v-model.trim="form.nickname"
           required
           placeholder="Enter your nickname"
           :state="validateNickname"
@@ -27,7 +27,7 @@
           <div class="form-icon"><i class="fa fa-envelope"></i></div>
         </b-input-group-prepend>
         <b-form-input
-          v-model="form.email"
+          v-model.trim="form.email"
           type="email"
           required
           placeholder="Enter your email"

@@ -1,5 +1,5 @@
 <template>
-  <b-modal hide-footer hide-header v-model="modalShow">
+  <b-modal centered hide-footer hide-header v-model="modalShow">
     <h6 class="text-center">{{ message }}</h6>
     <h6 class="text-center">Logout of other browser?</h6>
     <br />

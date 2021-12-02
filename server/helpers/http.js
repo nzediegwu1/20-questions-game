@@ -4,7 +4,7 @@ export const response = ({ res, code = 200, message, data, errors }) =>
 export class CustomError extends Error {
   constructor(message, code) {
     super(message);
-    this.code = code;
+    this.statusCode = code;
   }
 }
 
@@ -28,11 +28,15 @@ export const existsOr404 = (data, message) => {
  * @param {Func} action The function or method to be handled
  * @returns {Promise} Promise to resolve the action or return an error response
  */
-const resolve  = (action) => async (req, res) => {
+const resolve = (action) => async (req, res) => {
   try {
     return await action(req, res);
-  } catch ({ message, code }) {
-    return response({ res, code: code < 600 ? code : 500, errors: [message] });
+  } catch ({ message, statusCode = 500 }) {
+    return response({
+      res,
+      code: statusCode,
+      errors: [message],
+    });
   }
 };
 

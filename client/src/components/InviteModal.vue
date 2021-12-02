@@ -1,5 +1,5 @@
 <template>
-  <b-modal hide-footer v-model="modalShow">
+  <b-modal centered hide-footer v-model="modalShow">
     <template #modal-header="">
       <h5>Game Invite</h5>
     </template>
